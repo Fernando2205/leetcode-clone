@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolver {{ problem.name }}</title>
+    <link rel="stylesheet" href="/static/css/problem_detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/python-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/javascript-hint.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>Resolver: {{ problem.name }}</h1>
+        <p>{{ problem.description }}</p>
+        <p>Solución recursiva permitida: {{ 'Sí' if problem.recursive else 'No' }}</p>
+        {% if problem.forbidden_words %}
+        <p>Palabras prohibidas: {{ problem.forbidden_words | join(', ') }}</p>
+        {% else %}
+        <p>No hay palabras prohibidas.</p>
+        {% endif %}
+    </header>
+
+    <main>
+        <form id="solution-form" method="POST" action="/submit_solution">
+            <input type="hidden" name="problem_name" value="{{ problem.name }}">
+            <label for="language">Selecciona un lenguaje:</label>
+            <select id="language" name="language" onchange="updateEditor()">
+                <option value=""></option>
+                {% for lang in problem.languages %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <label for="solution_code">Ingresa tu solución:</label><br>
+            <textarea id="solution_code" name="solution_code" rows="20" cols="80"></textarea><br><br>
+            <input type="submit" value="Enviar solución">
+        </form>
+    </main>
+
+    <script>
+        var templates = {
+            "Python": function (inputParams, outputType) {
+                let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
+                return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí`;
+            },
+            "Java": function (inputParams, outputType) {
+                let params = inputParams.map(param => `${param.type} ${param.name}`).join(", ");
+                return `public class Solution {\n    public static ${outputType} solution(${params}) {\n        // Implementa tu solución aquí\n    }\n}`;
+            }
+            //Templates for other languages will be added here
+        };
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
+            lineNumbers: true,
+            mode: "python", // Cambia dinámicamente en updateEditor
+            theme: "dracula",
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            lineWrapping: true,
+            extraKeys: { "Ctrl-Space": "autocomplete" },
+        });
+
+        function updateEditor() {
+            var language = document.getElementById("language").value;
+            var baseCode = '';
+
+            if (templates[language]) {
+                // Generate the base code using the selected language template
+                baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
+        }
+
+        // Update the editor content and mode
+        editor.setValue(baseCode);
+        if (language === "Python") {
+            editor.setOption("mode", "python");
+        } else if (language === "Java") {
+            editor.setOption("mode", "text/x-java");
+        }
+        }
+    </script>
+
+</body>
+
+</html>

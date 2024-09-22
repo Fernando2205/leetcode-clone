@@ -1,0 +1,84 @@
+@import url(../css/general-styles.css);
+
+
+/* Encabezado */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 18px;
+}
+
+/* container */
+main {
+    padding: 20px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+/* problemas */
+.problem-selection {
+    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 300px);
+    gap: 50px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.problem-selection h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.problem-container {
+    background-color: white;
+    width: 300px;
+    min-height: 250px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+
+
+/* .problem-container h3:hover{
+    color: green;
+    cursor: pointer;
+} */
+
+.problem-container h3 {
+    font-size: 20px;
+}
+
+problem-container p {
+    text-align: justify;
+}
+.problem-container button{
+    color: white;
+    border-radius: 10px;
+    width: 6rem;
+    height: 2rem;
+    border: none;
+    background-color: #4CAF50;
+    align-self: center;
+transition:0.5s;
+
+}
+
+.problem-container button:hover{
+    background-color: #3e8e41;
+    scale: 1.1;
+    cursor:pointer;
+}

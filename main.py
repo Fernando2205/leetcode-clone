@@ -121,7 +121,7 @@ def check_recursion(solution_code, function_name):
     """
     Checks if the solution code uses recursion.
     """
-    return f"{function_name}(" in solution_code
+    return solution_code.count(f"{function_name}(") >= 2
 
 
 def is_string(value):
@@ -180,6 +180,8 @@ def submit_solution():
     for forbidden_word in problem['forbidden_words']:
         if solution_code and re.search(r'\b' + re.escape(forbidden_word) + r'\b', solution_code):
             return render_template('evaluation_result.html', result=f"Error: Uso de palabra prohibida '{forbidden_word}'", problem=problem, is_string=is_string)
+    if problem['recursive'] == False and check_recursion(solution_code, 'solution'):
+        return render_template('evaluation_result.html', result="Error: No se admite solución recursiva", problem=problem, is_string=is_string)
 
     # Use problem test_cases
     test_cases = problem['test_cases']

@@ -1,25 +1,10 @@
 """
 main.py
 
-This file contains a Flask web application that allows users to solve programming problems and submit their solutions for evaluation. The application includes the following functionalities:
+This file contains a Flask web application that allows users
+to solve programming problems and submit their solutions for evaluation.
+The application includes the following functionalities:
 
-- Display a list of available problems.
-- Display details of a specific problem.
-- Validate and evaluate solutions submitted by users.
-
-Functions:
-- validate_forbidden_words(solution_code, forbidden_words): 
-- check_recursion(solution_code, function_name): 
-- is_string(value): 
-- index(): 
-- show_problems(): 
-- problem_detail(problem_name): Displays the details of a specific problem.
-- submit_solution(): 
-- evaluate_python_code(solution_code, test_cases): 
-- evaluate_java_code(solution_code, test_cases): 
-Variables:
-- app: Instance of the Flask application.
-- problems: List of available programming problems.
 """
 import re
 from flask import Flask, render_template, request
@@ -29,7 +14,7 @@ app = Flask(__name__)
 problems = [{
     'name': 'FizzBuzz',
     'description':
-    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
+    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
     'languages': ['Python', 'Java'],
     'forbidden_words': ['if'],
     'recursive': True,
@@ -165,6 +150,9 @@ def show_problems():
 
 @app.route('/problem/<problem_name>')
 def problem_detail(problem_name):
+    """
+    Displays the details of a specific problem.
+    """
 
     problem = None
     for p in problems:
@@ -205,7 +193,8 @@ def submit_solution():
         result = evaluate_python_code(solution_code, test_cases)
         return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
     if language == 'Java':
-        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado :)", problem=problem, is_string=is_string)
+        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado aún :)", problem=problem, is_string=is_string)
+    return render_template('evaluation_result.html', result="Error: Lenguaje no soportado", problem=problem, is_string=is_string)
 
 
 def evaluate_python_code(solution_code, test_cases):
@@ -245,5 +234,5 @@ def evaluate_python_code(solution_code, test_cases):
 #     """
 
 
-if __name__ == '__main__':
+if __name__ == '_main_':
     app.run(debug=True)

@@ -14,7 +14,7 @@ app = Flask(__name__)
 problems = [{
     'name': 'FizzBuzz',
     'description':
-    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
+    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
     'languages': ['Python', 'Java'],
     'forbidden_words': ['if'],
     'recursive': True,
@@ -153,7 +153,6 @@ def problem_detail(problem_name):
     """
     Displays the details of a specific problem.
     """
-
     problem = None
     for p in problems:
         if p['name'] == problem_name:
@@ -191,10 +190,10 @@ def submit_solution():
         return render_template('evaluation_result.html', result="Error: No se ha especificado el lenguaje", problem=problem, is_string=is_string)
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
-        return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
-    if language == 'Java':
-        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado aún :)", problem=problem, is_string=is_string)
-    return render_template('evaluation_result.html', result="Error: Lenguaje no soportado", problem=problem, is_string=is_string)
+
+    else:
+        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado :)", problem=problem, is_string=is_string)
+    return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
 
 def evaluate_python_code(solution_code, test_cases):
@@ -234,5 +233,5 @@ def evaluate_python_code(solution_code, test_cases):
 #     """
 
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)

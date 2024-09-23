@@ -1,8 +1,28 @@
-import os
+"""
+main.py
+
+This file contains a Flask web application that allows users to solve programming problems and submit their solutions for evaluation. The application includes the following functionalities:
+
+- Display a list of available problems.
+- Display details of a specific problem.
+- Validate and evaluate solutions submitted by users.
+
+Functions:
+- validate_forbidden_words(solution_code, forbidden_words): 
+- check_recursion(solution_code, function_name): 
+- is_string(value): 
+- index(): 
+- show_problems(): 
+- problem_detail(problem_name): Displays the details of a specific problem.
+- submit_solution(): 
+- evaluate_python_code(solution_code, test_cases): 
+- evaluate_java_code(solution_code, test_cases): 
+Variables:
+- app: Instance of the Flask application.
+- problems: List of available programming problems.
+"""
 import re
-import subprocess
 from flask import Flask, render_template, request
-from flask.json import jsonify
 
 app = Flask(__name__)
 
@@ -104,6 +124,9 @@ problems = [{
 
 
 def validate_forbidden_words(solution_code, forbidden_words):
+    """
+    Validates if the solution code contains forbidden words.
+    """
     for word in forbidden_words:
         if word in solution_code:
             return False, f"Uso de palabra prohibida: {word}"
@@ -111,25 +134,38 @@ def validate_forbidden_words(solution_code, forbidden_words):
 
 
 def check_recursion(solution_code, function_name):
+    """
+    Checks if the solution code uses recursion.
+    """
     return f"{function_name}(" in solution_code
 
 
 def is_string(value):
+    """
+    Checks if the value is a string.
+    """
     return isinstance(value, str)
 
 
 @app.route('/')
 def index():
+    """
+    Endpoint for login.
+    """
     return 'Endpoint para el login'
 
 
 @app.route('/problems')
 def show_problems():
+    """
+    Displays the list of available problems.
+    """
     return render_template('problems.html', problems_arr=problems)
 
 
 @app.route('/problem/<problem_name>')
 def problem_detail(problem_name):
+
     problem = None
     for p in problems:
         if p['name'] == problem_name:
@@ -144,6 +180,9 @@ def problem_detail(problem_name):
 
 @app.route('/submit_solution', methods=['POST'])
 def submit_solution():
+    """
+    Processes and evaluates the solution submitted by the user.
+    """
     problem_name = request.form.get('problem_name')
     solution_code = request.form.get('solution_code')
     language = request.form.get('language')
@@ -165,11 +204,14 @@ def submit_solution():
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
         return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
-    else:
+    if language == 'Java':
         return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado :)", problem=problem, is_string=is_string)
 
 
 def evaluate_python_code(solution_code, test_cases):
+    """
+    Evaluates the solution code in Python using test cases.
+    """
     results = []
     for test_case in test_cases:
         try:
@@ -196,10 +238,11 @@ def evaluate_python_code(solution_code, test_cases):
     return results
 
 
-def evaluate_java_code(solution_code, test_cases):
-    # Evaluación de código Java - se requiere compilar y ejecutar con subprocess
-    # Aquí podrías usar un compilador de Java externo
-    pass  # Agregar lógica para compilar y ejecutar código en Java
+# def evaluate_java_code(solution_code, test_cases):
+#     """
+#     Evaluates the solution code in Java (to be implemented).
+
+#     """
 
 
 if __name__ == '__main__':

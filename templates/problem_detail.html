@@ -69,14 +69,24 @@
     </main>
 
     <script>
+        var typeMapping = {
+            // Map Python data types to other languages
+            "Java": {
+                "int": "int",
+                "str": "String",
+                "float": "float",
+                "bool": "boolean",
+                "list": "List",
+            }
+        };
         var templates = {
             "Python": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
                 return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí\n  return`;
             },
             "Java": function (inputParams, outputType) {
-                let params = inputParams.map(param => `${param.type} ${param.name}`).join(", ");
-                return `public class Solution {\n    public static ${outputType} solution(${params}) {\n        // Implementa tu solución aquí\n    }\n}`;
+                let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
+                return `public class Solution {\n    public static ${typeMapping["Java"][outputType]} solution(${params}) {\n        // Implementa tu solución aquí\n    }\n}`;
             }
             //Templates for other languages will be added here
         };

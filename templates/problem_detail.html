@@ -72,7 +72,7 @@
         var templates = {
             "Python": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
-                return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí`;
+                return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí\n  return`;
             },
             "Java": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${param.type} ${param.name}`).join(", ");
@@ -99,9 +99,12 @@
 
                 baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
         }
-
+        if (language === "Python") {
+            editor.setOption("mode", "python");
+        } else if (language === "Java") {
+            editor.setOption("mode", "text/x-java");
+        }
         editor.setValue(baseCode);
-        editor.setOption("mode", language === "Python" ? "python" : "text/x-java");
         }
     </script>
 

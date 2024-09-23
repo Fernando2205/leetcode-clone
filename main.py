@@ -164,7 +164,9 @@ def submit_solution():
         return render_template('evaluation_result.html', result="Error: No se ha especificado el lenguaje", problem=problem, is_string=is_string)
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
-    return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
+        return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
+    else:
+        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado :)", problem=problem, is_string=is_string)
 
 
 def evaluate_python_code(solution_code, test_cases):

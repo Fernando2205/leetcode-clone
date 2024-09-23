@@ -42,7 +42,7 @@ main {
     border: 1px solid #C8CDD0;
     border-radius: 5px;
 }
-.back-btn{
+.back-btn, .problems-btn{
     background-color: #28a745;
     text-decoration: none;
     color: white;
@@ -51,6 +51,7 @@ main {
     transition: 0.5s;
     
 }
-.back-btn:hover{
+.back-btn:hover, .problems-btn:hover{
     background-color: #218838;
 }
+

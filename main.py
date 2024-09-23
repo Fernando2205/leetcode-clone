@@ -3,7 +3,6 @@ main.py
 
 This file contains a Flask web application that allows users
 to solve programming problems and submit their solutions for evaluation.
-The application includes the following functionalities:
 
 """
 import re
@@ -51,7 +50,7 @@ problems = [{
     True,
     'input_params': [{
         'name': 'arr',
-        'type': 'List[int]'
+        'type': 'list[int]'
     }, {
         'name': 'target',
         'type': 'int'
@@ -190,10 +189,10 @@ def submit_solution():
         return render_template('evaluation_result.html', result="Error: No se ha especificado el lenguaje", problem=problem, is_string=is_string)
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
+        return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
     else:
-        return render_template('evaluation_result.html', result="Error: El lenguaje aú no está soportado :)", problem=problem, is_string=is_string)
-    return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
+        return render_template('evaluation_result.html', result="Error: El lenguaje aún no está soportado :)", problem=problem, is_string=is_string)
 
 
 def evaluate_python_code(solution_code, test_cases):

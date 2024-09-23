@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Solución</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <header>
+        <h1>Detalles de la Solución</h1>
+    </header>
+    <main>
+        <p>{{ solution['ID'] }}</p>
+        <pre>{{ solution['Details'] | join('\n') }}</pre>
+        <a class="back-btn" href="{{ url_for('history') }}">Volver al historial</a>
+    </main>
+</body>
+
+</html>

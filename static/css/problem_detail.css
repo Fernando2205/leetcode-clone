@@ -1,9 +1,10 @@
 @import url(../css/general-styles.css);
 header{
-  background-color: #4CAF50;
+  background-color: #212E36;
   padding: 20px;
   text-align: center;
   color: white;
+  font-weight: 500;
 }
 
 header p {
@@ -14,47 +15,86 @@ header h1{
   margin: 0;
   font-size: 2.5em;
 }
+body {
+  background-color: #192229;
+  color: #C8CDD0;
+}
 
 form{
   flex-direction: column;
 }
 
 main {
-    max-width: 800px;
-    margin: 20px auto;
+    margin: 20px ;
     padding: 20px;
-    background-color: #ffffff;
+    background-color: #212E36;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
-label{
-  margin: 10px 0 5px;
+.solution-form label{
+  font-size: 1.1rem;
   font-weight: bold;
 }
 
-select,
-textarea,
-input[type="submit"] {
+.solution-form select,
+textarea {
     padding: 10px;
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-size: 1em;
 }
-
-input[type="submit"] {
-    background-color: #007bff;
-    color: #ffffff;
-    cursor: pointer;
-    transition: background-color 0.3s;
+form input[type="submit"] {
+  background-color: #28a745;
+  font-size: 1em;
+  color: white;
+  border: none;
+  padding: 10px 20px ;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.5s;
 }
 
-input[type="submit"]:hover {
-    background-color: #0056b3;
+form input[type="submit"]:hover {
+  background-color: #218838;
 }
 
-p {
-  font-weight: bold;
-  margin-left: 40px;
-  margin-right: 40px;
+/* Estilos para las secciones de ejemplo */
+.examples-div {
+  display: flex;
+  background-color: #212E36;
+  padding: 35px;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.examples-div h2, .examples-div h3 {
+  margin-top: 0;
+}
+
+.examples-div p {
+  
+  padding: 10px;
+  border-radius: 4px;
+  /* font-family: 'Courier New', Courier, monospace; */
+}
+
+/* Estilos específicos para los ejemplos correctos e incorrectos */
+.correct-example {
+  border-left: 5px solid #28a745;
+}
+
+.incorrect-example {
+  border-left: 5px solid #dc3545;
+}
+
+.explanation{
+  width: 60%;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.examples{
+  font-size: 1.2rem;
+  width: 40%;
 }

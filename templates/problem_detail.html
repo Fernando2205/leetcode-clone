@@ -7,7 +7,8 @@
     <title>Resolver {{ problem.name }}</title>
     <link rel="stylesheet" href="/static/css/problem_detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
@@ -19,18 +20,39 @@
 
 <body>
     <header>
-        <h1>Resolver: {{ problem.name }}</h1>
-        <p>{{ problem.description }}</p>
-        <p>Solución recursiva permitida: {{ 'Sí' if problem.recursive else 'No' }}</p>
-        {% if problem.forbidden_words %}
-        <p>Palabras prohibidas: {{ problem.forbidden_words | join(', ') }}</p>
-        {% else %}
-        <p>No hay palabras prohibidas.</p>
-        {% endif %}
+        <h1>{{ problem.name }}</h1>
+
     </header>
 
+
+    <section class="examples-div">
+        <div class="examples">
+            <h2>Ejemplos de entrada y salida:</h2>
+            <br>
+            <h3>Caso 1:</h3>
+            <p><strong>Entrada:</strong> {{ problem.examples.correct.input }}</p>
+            <p><strong>Salida Esperada:</strong> {{ problem.examples.correct.output }}</p>
+
+            <h3>Caso 2:</h3>
+            <p><strong>Entrada:</strong> {{ problem.examples.incorrect.input }}</p>
+            <p><strong>Salida Esperada:</strong> {{ problem.examples.incorrect.output }}</p>
+        </div>
+        <div class="explanation">
+            <p>{{ problem.description }}</p>
+            <p>Solución recursiva permitida: {{ 'Sí' if problem.recursive else 'No' }}</p>
+            {% if problem.forbidden_words %}
+            <p>Palabras prohibidas: {{ problem.forbidden_words | join(', ') }}</p>
+            {% else %}
+            <p>No hay palabras prohibidas.</p>
+            {% endif %}
+        </div>
+
+
+        </div>
+    </section>
+
     <main>
-        <form id="solution-form" method="POST" action="/submit_solution">
+        <form class="solution-form" id=" solution-form" method="POST" action="/submit_solution">
             <input type="hidden" name="problem_name" value="{{ problem.name }}">
             <label for="language">Selecciona un lenguaje:</label>
             <select id="language" name="language" onchange="updateEditor()">
@@ -40,7 +62,7 @@
                 {% endfor %}
             </select>
             <br><br>
-            <label for="solution_code">Ingresa tu solución:</label><br>
+            <label for="solution_code">Ingresa tu solución:</label><br><br>
             <textarea id="solution_code" name="solution_code" rows="20" cols="80"></textarea><br><br>
             <input type="submit" value="Enviar solución">
         </form>
@@ -62,7 +84,7 @@
         var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
             lineNumbers: true,
             mode: "python", // Cambia dinámicamente en updateEditor
-            theme: "dracula",
+            theme: "tomorrow-night-bright",
             autoCloseBrackets: true,
             matchBrackets: true,
             lineWrapping: true,
@@ -74,17 +96,12 @@
             var baseCode = '';
 
             if (templates[language]) {
-                // Generate the base code using the selected language template
+
                 baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
         }
 
-        // Update the editor content and mode
         editor.setValue(baseCode);
-        if (language === "Python") {
-            editor.setOption("mode", "python");
-        } else if (language === "Java") {
-            editor.setOption("mode", "text/x-java");
-        }
+        editor.setOption("mode", language === "Python" ? "python" : "text/x-java");
         }
     </script>
 

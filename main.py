@@ -1,11 +1,15 @@
-from flask import Flask, render_template
+import os
+import re
+import subprocess
+from flask import Flask, render_template, request
+from flask.json import jsonify
 
 app = Flask(__name__)
 
 problems = [{
     'name': 'FizzBuzz',
     'description':
-    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 5, Buzz es multiplo de 3, FizzBuzz es multiplo de ambos o su representación en cadena en cualquier otro caso',
+    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
     'languages': ['Python', 'Java'],
     'forbidden_words': ['if'],
     'recursive': True,
@@ -13,7 +17,24 @@ problems = [{
         'name': 'n',
         'type': 'int'
     }],
-    'output_type': 'str'
+    'output_type': 'str',
+    'examples': {
+        'correct': {
+            'input': '15',
+            'output': '"FizzBuzz"'
+        },
+        'incorrect': {
+            'input': '7',
+            'output': '"7"'
+        }
+    },
+    'test_cases': [
+        {"input": [1176711096], "expected_output": "Fizz"},
+        {"input": [5], "expected_output": "Buzz"},
+        {"input": [589958805], "expected_output": "FizzBuzz"},
+        {"input": [1], "expected_output": "1"},
+        {"input": [998160272], "expected_output": "998160272"}
+    ]
 }, {
     'name':
     'Binary Search',
@@ -31,11 +52,29 @@ problems = [{
         'type': 'int'
     }],
     'output_type':
-    'int'
+    'int',
+    'examples': {
+        'correct': {
+            'input': '[1, 2, 3, 4, 5], 3',
+            'output': '2'
+        },
+        'incorrect': {
+            'input': '[1, 2, 3, 4, 5], 6',
+            'output': '-1'
+        }
+    },
+    'test_cases': [
+        {"input": [[1, 2, 3, 4, 5], 3],
+            "expected_output": 2},
+        {"input": [[1, 2, 3, 4, 5], 6], "expected_output": -1},
+        {"input": [[], 1], "expected_output": -1},
+    ]
+
+
 }, {
     'name': 'Factorial',
     'description':
-    'Escribe una función que permita calcular el factorial de un numero entero',
+    'Escribe una función que permita calcular el factorial de un numero entero positivo, si la entrada es negativa retornar -1',
     'languages': ['Python', 'Java'],
     'forbidden_words': [],
     'recursive': False,
@@ -43,23 +82,50 @@ problems = [{
         'name': 'n',
         'type': 'int'
     }],
-    'output_type': 'int'
+    'output_type': 'int',
+    'examples': {
+        'correct': {
+            'input': '5',
+            'output': '120'
+        },
+        'incorrect': {
+            'input': '-6',
+            'output': '-1'
+        }
+    },
+    'test_cases': [
+        {"input": [5], "expected_output": 120},
+        {"input": [0], "expected_output": 1},
+        {"input": [-6], "expected_output": -1},
+    ]
+
+
 }]
+
+
+def validate_forbidden_words(solution_code, forbidden_words):
+    for word in forbidden_words:
+        if word in solution_code:
+            return False, f"Uso de palabra prohibida: {word}"
+    return True, ""
+
+
+def check_recursion(solution_code, function_name):
+    return f"{function_name}(" in solution_code
+
+
+def is_string(value):
+    return isinstance(value, str)
 
 
 @app.route('/')
 def index():
-    return 'para ver los problemas ir a /problems'
+    return 'Endpoint para el login'
 
 
 @app.route('/problems')
 def show_problems():
     return render_template('problems.html', problems_arr=problems)
-
-
-@app.route('/getproblems')
-def get_problems():
-    return (problems)
 
 
 @app.route('/problem/<problem_name>')
@@ -74,6 +140,64 @@ def problem_detail(problem_name):
         return "Problema no encontrado", 404
 
     return render_template('problem_detail.html', problem=problem)
+
+
+@app.route('/submit_solution', methods=['POST'])
+def submit_solution():
+    problem_name = request.form.get('problem_name')
+    solution_code = request.form.get('solution_code')
+    language = request.form.get('language')
+
+    problem = next((p for p in problems if p['name'] == problem_name), None)
+    if not problem:
+        return "Problema no encontrado", 404
+
+    for forbidden_word in problem['forbidden_words']:
+        if solution_code and re.search(r'\b' + re.escape(forbidden_word) + r'\b', solution_code):
+            return render_template('evaluation_result.html', result=f"Error: Uso de palabra prohibida '{forbidden_word}'", problem=problem, is_string=is_string)
+
+    # Use problem test_cases
+    test_cases = problem['test_cases']
+
+    result = None
+    if language == '':
+        return render_template('evaluation_result.html', result="Error: No se ha especificado el lenguaje", problem=problem, is_string=is_string)
+    if language == 'Python':
+        result = evaluate_python_code(solution_code, test_cases)
+    return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
+
+
+def evaluate_python_code(solution_code, test_cases):
+    results = []
+    for test_case in test_cases:
+        try:
+            # We use exec() safely in a controlled environment
+            exec_globals = {}
+            exec(solution_code, exec_globals)
+
+           # Call the solution() function with the test case parameters
+            output = exec_globals['solution'](*test_case["input"])
+            results.append({
+                "input": test_case["input"],
+                "expected_output": test_case["expected_output"],
+                "user_output": output,
+                "passed": output == test_case["expected_output"]
+            })
+        except Exception as e:
+            results.append({
+                "input": test_case["input"],
+                "expected_output": test_case["expected_output"],
+                "user_output": str(e),
+                "passed": False
+            })
+
+    return results
+
+
+def evaluate_java_code(solution_code, test_cases):
+    # Evaluación de código Java - se requiere compilar y ejecutar con subprocess
+    # Aquí podrías usar un compilador de Java externo
+    pass  # Agregar lógica para compilar y ejecutar código en Java
 
 
 if __name__ == '__main__':

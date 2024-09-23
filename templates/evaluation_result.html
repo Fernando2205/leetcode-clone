@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de la Evaluación</title>
+    <link rel="stylesheet" href="/static/css/evaluation_result.css">
+</head>
+
+<body>
+    <header>
+        <h1>Resultado para el problema: {{ problem.name }}</h1>
+    </header>
+
+    <main>
+        {% if is_string(result) %}
+        <p class="err_msj">{{ result }}</p>
+        {% else %}
+        <table class="table_results">
+            <tr>
+                <th>Entrada</th>
+                <th>Salida Esperada</th>
+                <th>Tu Salida</th>
+                <th>¿Pasó?</th>
+            </tr>
+            {% for case in result %}
+            <tr>
+                <td>{{ case.input }}</td>
+                <td>{{ case.expected_output }}</td>
+                <td>{{ case.user_output }}</td>
+                <td>{% if case.passed %}✔️{% else %}❌{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        <a class="back-btn" href="{{ url_for('problem_detail', problem_name=problem.name) }}">Volver al problema</a>
+    </main>
+</body>
+
+</html>

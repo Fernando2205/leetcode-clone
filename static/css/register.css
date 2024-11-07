@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+}
+
+body {
+    background-color: #192229;
+    width: 100%;
+    min-height: 100vh;
+}
+
+main {
+    display: flex;
+    min-height: 100vh;
+    height: 100vh;
+}
+
+.login {
+    background-color: #212E36;
+    width: 90vw;
+    height: 90vh;
+    display: flex;
+    border-radius: 12px;
+    max-height: 640px;
+    margin: auto;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+}
+
+label {
+    font-weight: 500;
+    color: #ebebeb;
+}
+
+.input {
+    border-radius: 4px;
+    border: 1px solid #192229;
+    background-color: #192229;
+    height: 48px;
+    padding-left: 10px;
+}
+
+.input-packed {
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-group {
+    width: 50%;
+}
+
+.input-group input {
+    width: 97%;
+}
+
+.login-btn {
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    width: 200px;
+    height: 45px;
+    font-size: 14px;
+    color: white;
+    align-content: center;
+    text-align: center;
+    background-color: #28a745;
+}
+
+.login-btn:hover {
+    cursor: pointer;
+}
+
+.createAccount {
+    gap: 4px;
+    color: #ffffff;
+    font-weight: 600;
+    display: inline-flex;
+    font-size: 14px;
+}
+
+.createAccount a {
+    color: #26cc4d;
+    text-decoration: none;
+}

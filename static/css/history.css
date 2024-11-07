@@ -1,0 +1,74 @@
+@import url('/static/css/general-styles.css');
+
+header {
+    background-color: #212E36;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+}
+
+body {
+    background-color: #192229;
+    color: #C8CDD0;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    text-align: center;
+    background-color: #212E36;
+    margin: 20px;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.history-table th, .history-table td {
+    padding: 12px;
+    border: 1px solid #C8CDD0;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #2A3A47;
+    color: white;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #2A3A47;
+}
+
+.history-table tr:hover {
+    background-color: #1C252D;
+}
+
+.view-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.view-btn:hover {
+    background-color: #218838;
+}
+
+.back-list-btn, .back-btn {
+    background-color: #28a745;
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    transition: 0.5s;
+}
+
+.back-list-btn:hover, .back-btn:hover {
+    background-color: #218838;
+}

@@ -1,0 +1,46 @@
+@import url('/static/css/general-styles.css');
+
+header {
+    background-color: #212E36;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-weight: 500;
+}
+
+body {
+    background-color: #192229;
+    color: #C8CDD0;
+}
+
+main {
+    text-align: center;
+    background-color: #212E36;
+    margin: 20px;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.solution-code {
+    background-color: #1E252B;
+    color: #C8CDD0;
+    border: 1px solid #C8CDD0;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Mantener el formato del código */
+    overflow: auto; /* Agregar desplazamiento si es necesario */
+    max-height: 300px; /* Limitar la altura del cuadro de código */
+}
+
+.history-btn {
+    background-color: #28a745;
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    transition: 0.5s;
+}
+
+.history-btn:hover {
+    background-color: #218838;
+}

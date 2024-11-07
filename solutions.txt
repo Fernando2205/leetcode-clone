@@ -1,0 +1,9 @@
+ID: 1
+Problem: FizzBuzz
+Language: Python
+Solution Code:
+def solution(n: int) -> str:
+  # Implementa tu solución aquí
+  return "arroz"
+Result: [{'input': [1176711096], 'expected_output': 'Fizz', 'user_output': 'arroz', 'passed': False}, {'input': [5], 'expected_output': 'Buzz', 'user_output': 'arroz', 'passed': False}, {'input': [589958805], 'expected_output': 'FizzBuzz', 'user_output': 'arroz', 'passed': False}, {'input': [1], 'expected_output': '1', 'user_output': 'arroz', 'passed': False}, {'input': [998160272], 'expected_output': '998160272', 'user_output': 'arroz', 'passed': False}]
+----------------------------------------

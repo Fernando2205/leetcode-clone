@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Soluciones</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <header>
+        <h1>Historial de Soluciones</h1>
+    </header>
+    <main>
+        <ul>
+            {% for solution in solutions %}
+            <li>
+                <a href="{{ url_for('view_solution', solution_id=solution['id'].split(': ')[1]) }}">
+                    {{ solution['Problem'] }} (ID: {{ solution['id'].split(': ')[1] }})
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
+    </main>
+</body>
+
+</html>

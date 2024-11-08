@@ -9,13 +9,10 @@
 </head>
 
 <body>
-    <header>
-        <h1>Aprende a Programar</h1>
-        <p>Selecciona un problema para resolver y mejorar tus habilidades de programación.</p>
-    </header>
-
+    {% include 'header.html' %}
     <main>
-        <h2>Selecciona un problema</h2>
+        <h2>Aprende a Programar</h2>
+        <p>Selecciona un problema para resolver y mejorar tus habilidades de programación.</p>
         <section class="problem-selection">
 
             {% for problem in problems_arr %}
@@ -30,8 +27,7 @@
             {% endfor %}
 
         </section>
-    </main>
-
+    </main> 
 </body>
 
 </html>

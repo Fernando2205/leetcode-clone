@@ -1,0 +1,57 @@
+
+header {
+    background-color: #212E36;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.main_nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.profile {
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#dropdown-toggle {
+    cursor: pointer;
+}
+
+.fa-bell {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-width: 150px;
+    z-index: 1;
+    border-radius: 5px;
+    right: 0;
+    margin-top: 5px;
+}
+
+.dropdown-menu a {
+    display: block;
+    color: rgb(197, 0, 0);
+    text-decoration: none;
+    padding: 5px 0;
+}
+

@@ -10,7 +10,7 @@ from flask import Flask, redirect, render_template, request, url_for, flash
 from flask_login import LoginManager, current_user, login_user, logout_user
 from db import db
 from urllib.parse import urlparse
-from User import User
+from models import User
 from forms import LoginForm, SignupForm
 
 app = Flask(__name__)

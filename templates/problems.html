@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aprende a Programar</title>
     <link rel="stylesheet" href="/static/css/problems.css">
 </head>
+
 <body>
     <header>
         <h1>Aprende a Programar</h1>
@@ -15,20 +17,21 @@
     <main>
         <h2>Selecciona un problema</h2>
         <section class="problem-selection">
-            
+
             {% for problem in problems_arr %}
             <div class="problem-container">
-                
-                    <h3>Problema: {{problem.name}}</h3>
-                    <p>{{problem.description}}</p>
-            
-                    <button onclick ="window.location.href='/problem/{{problem.name}}'">Resolver</button>
-                
-                </div>
+
+                <h3>Problema: {{problem.name}}</h3>
+                <p>{{problem.description}}</p>
+
+                <button onclick="window.location.href='/problem/{{problem.id}}'">Resolver</button>
+
+            </div>
             {% endfor %}
-            
+
         </section>
     </main>
 
 </body>
+
 </html>

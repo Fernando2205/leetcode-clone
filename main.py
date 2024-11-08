@@ -5,114 +5,23 @@ This file contains a Flask web application that allows users
 to solve programming problems and submit their solutions for evaluation.
 
 """
+import os
 import re
+import json
 from flask import Flask, redirect, render_template, request, url_for, flash
-from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from db import db
 from urllib.parse import urlparse
-from models import User
+from models import Solution, User, Problem
 from forms import LoginForm, SignupForm
 
+
 app = Flask(__name__)
-problems = [{
-    'name': 'FizzBuzz',
-    'description':
-    'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
-    'languages': ['Python', 'Java'],
-    'forbidden_words': ['if'],
-    'recursive': True,
-    'input_params': [{
-        'name': 'n',
-        'type': 'int'
-    }],
-    'output_type': 'str',
-    'examples': {
-        'correct': {
-            'input': '15',
-            'output': '"FizzBuzz"'
-        },
-        'incorrect': {
-            'input': '7',
-            'output': '"7"'
-        }
-    },
-    'test_cases': [
-        {"input": [1176711096], "expected_output": "Fizz"},
-        {"input": [5], "expected_output": "Buzz"},
-        {"input": [589958805], "expected_output": "FizzBuzz"},
-        {"input": [1], "expected_output": "1"},
-        {"input": [998160272], "expected_output": "998160272"}
-    ]
-}, {
-    'name':
-    'Binary Search',
-    'description':
-    'Dada una lista ordenada de enteros positivos y un objetivo, implementar busqueda binaria para obtener el indice del objetivo dentro de la lista, en caso de no existir retornar -1',
-    'languages': ['Python', 'Java'],
-    'forbidden_words': [],
-    'recursive':
-    True,
-    'input_params': [{
-        'name': 'arr',
-        'type': 'list[int]'
-    }, {
-        'name': 'target',
-        'type': 'int'
-    }],
-    'output_type':
-    'int',
-    'examples': {
-        'correct': {
-            'input': '[1, 2, 3, 4, 5], 3',
-            'output': '2'
-        },
-        'incorrect': {
-            'input': '[1, 2, 3, 4, 5], 6',
-            'output': '-1'
-        }
-    },
-    'test_cases': [
-        {"input": [[1, 2, 3, 4, 5], 3],
-            "expected_output": 2},
-        {"input": [[1, 2, 3, 4, 5], 6], "expected_output": -1},
-        {"input": [[], 1], "expected_output": -1},
-    ]
 
-
-}, {
-    'name': 'Factorial',
-    'description':
-    'Escribe una función que permita calcular el factorial de un numero entero positivo, si la entrada es negativa retornar -1',
-    'languages': ['Python', 'Java'],
-    'forbidden_words': [],
-    'recursive': False,
-    'input_params': [{
-        'name': 'n',
-        'type': 'int'
-    }],
-    'output_type': 'int',
-    'examples': {
-        'correct': {
-            'input': '5',
-            'output': '120'
-        },
-        'incorrect': {
-            'input': '-6',
-            'output': '-1'
-        }
-    },
-    'test_cases': [
-        {"input": [5], "expected_output": 120},
-        {"input": [0], "expected_output": 1},
-        {"input": [-6], "expected_output": -1},
-    ]
-
-
-}]
-
-app.config['SECRET_KEY'] = 'secret'
+secret_key = os.urandom(24)
+app.config['SECRET_KEY'] = secret_key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -149,7 +58,7 @@ def login():
     return render_template('login.html', title='Ingresar', form=form)
 
 
-@app.route("/signup/", methods=["GET", "POST"])
+@app.route('/signup/', methods=["GET", "POST"])
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for('show_problems'))
@@ -174,61 +83,67 @@ def logout():
 
 
 @app.route('/problems')
+@login_required
 def show_problems():
     """
     Displays the list of available problems.
     """
+    problems = Problem.query.all()
     return render_template('problems.html', problems_arr=problems)
 
 
-@app.route('/problem/<problem_name>')
-def problem_detail(problem_name):
+@app.route('/problem/<int:problem_id>')
+@login_required
+def problem_detail(problem_id):
     """
     Displays the details of a specific problem.
     """
-    problem = None
-    for p in problems:
-        if p['name'] == problem_name:
-            problem = p
-            break
-
-    if not problem:
-        return "Problema no encontrado", 404
-
+    problem = Problem.query.get_or_404(problem_id)
+    problem.languages = json.loads(problem.languages)
+    problem.forbidden_words = json.loads(problem.forbidden_words)
+    problem.input_params = json.loads(problem.input_params)
+    problem.examples = json.loads(problem.examples)
+    problem.test_cases = json.loads(problem.test_cases)
     return render_template('problem_detail.html', problem=problem)
 
 
 @app.route('/submit_solution', methods=['POST'])
+@login_required
 def submit_solution():
     """
     Processes and evaluates the solution submitted by the user.
     """
-    problem_name = request.form.get('problem_name')
+    problem_id = request.form.get('problem_id')
     solution_code = request.form.get('solution_code')
     language = request.form.get('language')
 
-    problem = next((p for p in problems if p['name'] == problem_name), None)
+    problem = Problem.query.get_or_404(problem_id)
     if not problem:
         return "Problema no encontrado", 404
 
-    for forbidden_word in problem['forbidden_words']:
+    forbidden_words = json.loads(problem.forbidden_words)
+    for forbidden_word in forbidden_words:
         if solution_code and re.search(r'\b' + re.escape(forbidden_word) + r'\b', solution_code):
             return render_template('evaluation_result.html', result=f"Error: Uso de palabra prohibida '{forbidden_word}'", problem=problem, is_string=is_string)
-    if problem['recursive'] == False and check_recursion(solution_code, 'solution'):
+
+    if problem.recursive == False and check_recursion(solution_code, 'solution'):
         return render_template('evaluation_result.html', result="Error: No se admite solución recursiva", problem=problem, is_string=is_string)
 
-    # Use problem test_cases
-    test_cases = problem['test_cases']
+    test_cases = json.loads(problem.test_cases)
 
-    result = None
-    if language == '':
-        return render_template('evaluation_result.html', result="Error: No se ha especificado el lenguaje", problem=problem, is_string=is_string)
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
-        return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
-
+    # elif language == 'Java':
+        # result = evaluate_java_code(solution_code, test_cases)
     else:
-        return render_template('evaluation_result.html', result="Error: El lenguaje aún no está soportado :)", problem=problem, is_string=is_string)
+        result = "Lenguaje no soportado"
+
+    solution = Solution(user_id=current_user.id,
+                        problem_id=problem.id, code=solution_code, result=json.dumps(result))
+    db.session.add(solution)
+    db.session.commit()
+
+    return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
 
 def validate_forbidden_words(solution_code, forbidden_words):

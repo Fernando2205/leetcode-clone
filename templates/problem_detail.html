@@ -53,7 +53,7 @@
 
     <main>
         <form class="solution-form" id=" solution-form" method="POST" action="/submit_solution">
-            <input type="hidden" name="problem_name" value="{{ problem.name }}">
+            <input type="hidden" name="problem_id" value="{{ problem.id }}">
             <label for="language">Selecciona un lenguaje:</label>
             <select id="language" name="language" onchange="updateEditor()">
                 <option value=""></option>

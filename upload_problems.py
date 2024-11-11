@@ -103,17 +103,16 @@ with app.app_context():
         problem = Problem(
             name=problem_data['name'],
             description=problem_data['description'],
-            # Convertir a JSON
             languages=json.dumps(problem_data['languages']),
             forbidden_words=json.dumps(
-                problem_data['forbidden_words']),  # Convertir a JSON
+                problem_data['forbidden_words']),
             recursive=problem_data['recursive'],
             input_params=json.dumps(
-                problem_data['input_params']),  # Convertir a JSON
+                problem_data['input_params']),
             output_type=problem_data['output_type'],
-            examples=json.dumps(problem_data['examples']),  # Convertir a JSON
+            examples=json.dumps(problem_data['examples']),
             test_cases=json.dumps(
-                problem_data['test_cases'])  # Convertir a JSON
+                problem_data['test_cases'])
         )
         db.session.add(problem)
     db.session.commit()

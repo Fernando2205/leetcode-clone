@@ -4,17 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Solución</title>
-    <link rel="stylesheet" href="">
+    <title>Detalle de la Solución</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view_solution.css') }}">
 </head>
 
 <body>
     <header>
-        <h1>Detalles de la Solución</h1>
+        <h1>Detalle de la solución</h1>
     </header>
     <main>
-        <p>{{ solution['ID'] }}</p>
-        <pre>{{ solution['Details'] | join('\n') }}</pre>
+        <h2>Problema: {{ solution.problem.name }}</h2>
+        <p><strong>Descripción:</strong> {{ solution.problem.description }}</p>
+        <p><strong>Fecha de Envío:</strong> {{ solution.timestamp }}</p>
+        <p><strong>Tu Código:</strong></p>
+        <pre class="solution-code">{{ solution.code }}</pre>
+        <p><strong>Resultado:</strong></p>
+        <table class="table_results">
+            <tr>
+                <th>Entrada</th>
+                <th>Salida Esperada</th>
+                <th>Tu Salida</th>
+                <th>¿Pasó?</th>
+            </tr>
+            {% for case in solution.result %}
+
+            <tr>
+
+                <td>{{ case.input }}</td>
+                <td>{{ case.expected_output }}</td>
+                <td>{{ case.user_output }}</td>
+                <td>{% if case.passed %}✔️{% else %}❌{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </table>
         <a class="back-btn" href="{{ url_for('history') }}">Volver al historial</a>
     </main>
 </body>

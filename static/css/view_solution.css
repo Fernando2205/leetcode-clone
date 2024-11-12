@@ -1,12 +1,6 @@
 @import url('/static/css/general-styles.css');
 
-header {
-    background-color: #212E36;
-    padding: 20px;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-}
+
 
 body {
     background-color: #192229;
@@ -22,6 +16,7 @@ main {
 }
 
 .solution-code {
+    text-align: left;
     background-color: #1E252B;
     color: #C8CDD0;
     border: 1px solid #C8CDD0;
@@ -43,4 +38,32 @@ main {
 
 .history-btn:hover {
     background-color: #218838;
+}
+
+
+.table_results{
+    width: 100%;
+    margin-bottom: 15px;
+    
+}
+  
+.table_results tbody{
+    text-align: center;
+}
+
+.table_results th{
+    border: 1px solid white;
+}
+.table_results td {
+    border: 1px solid #C8CDD0;
+    border-radius: 5px;
+}
+
+.back-btn{
+    background-color: #28a745;
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    transition: 0.5s;
 }

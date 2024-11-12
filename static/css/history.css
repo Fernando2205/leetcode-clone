@@ -1,13 +1,5 @@
 @import url('/static/css/general-styles.css');
 
-header {
-    background-color: #212E36;
-    padding: 20px;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-}
-
 body {
     background-color: #192229;
     color: #C8CDD0;
@@ -15,60 +7,54 @@ body {
 }
 
 main {
-    text-align: center;
-    background-color: #212E36;
-    margin: 20px;
-    border-radius: 8px;
+    max-width: 800px;
+    margin: 50px auto;
     padding: 20px;
+    background-color: #212E36;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
 }
 
-.history-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+h1 {
+    color: #C8CDD0;
 }
 
-.history-table th, .history-table td {
-    padding: 12px;
-    border: 1px solid #C8CDD0;
-    text-align: left;
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.history-table th {
+li {
     background-color: #2A3A47;
-    color: white;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-.history-table tr:nth-child(even) {
-    background-color: #2A3A47;
-}
-
-.history-table tr:hover {
+li:hover {
     background-color: #1C252D;
 }
 
-.view-btn {
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.problems-btn {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 20px;
     background-color: #28a745;
     color: white;
-    padding: 8px 16px;
+    text-align: center;
+    border-radius: 5px;
     text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-.view-btn:hover {
-    background-color: #218838;
-}
-
-.back-list-btn, .back-btn {
-    background-color: #28a745;
-    text-decoration: none;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    transition: 0.5s;
-}
-
-.back-list-btn:hover, .back-btn:hover {
+.problems-btn:hover {
     background-color: #218838;
 }

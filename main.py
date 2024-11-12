@@ -11,6 +11,7 @@ import json
 from flask import Flask, redirect, render_template, request, url_for, flash
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from db import db
+from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
 from models import Solution, User, Problem
 from forms import LoginForm, SignupForm
@@ -35,7 +36,7 @@ def loadUser(user_id):
 
 @app.before_request
 def create_tables():
-    if not hasattr(app, 'tables_crrated'):
+    if not hasattr(app, 'tables_created'):
         db.create_all()
         app.tables_crrated = True
 
@@ -138,36 +139,14 @@ def submit_solution():
     else:
         result = "Lenguaje no soportado"
 
+    # Asegúrate de convertir el resultado a JSON antes de almacenarlo
+
     solution = Solution(user_id=current_user.id,
                         problem_id=problem.id, code=solution_code, result=json.dumps(result))
     db.session.add(solution)
     db.session.commit()
 
     return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
-
-
-def validate_forbidden_words(solution_code, forbidden_words):
-    """
-    Validates if the solution code contains forbidden words.
-    """
-    for word in forbidden_words:
-        if word in solution_code:
-            return False, f"Uso de palabra prohibida: {word}"
-    return True, ""
-
-
-def check_recursion(solution_code, function_name):
-    """
-    Checks if the solution code uses recursion.
-    """
-    return solution_code.count(f"{function_name}(") >= 2
-
-
-def is_string(value):
-    """
-    Checks if the value is a string.
-    """
-    return isinstance(value, str)
 
 
 @app.route('/register', methods=['GET'])
@@ -210,6 +189,53 @@ def evaluate_python_code(solution_code, test_cases):
 #     Evaluates the solution code in Java (to be implemented).
 
 #     """
+@app.route('/history')
+@login_required
+def history():
+    """
+    Displays the history of solutions submitted by the user.
+    """
+    solutions = Solution.query.options(joinedload(
+        Solution.problem)).filter_by(user_id=current_user.id).all()
+    for solution in solutions:
+        solution.result = json.loads(solution.result)
+    return render_template('history.html', solutions=solutions)
+
+
+@app.route('/solution/<int:solution_id>')
+@login_required
+def view_solution(solution_id):
+    """
+    Displays the details of a specific solution.
+    """
+    solution = Solution.query.options(joinedload(
+        Solution.problem)).get_or_404(solution_id)
+    solution.result = json.loads(solution.result)
+    return render_template('view_solution.html', solution=solution,)
+
+
+def validate_forbidden_words(solution_code, forbidden_words):
+    """
+    Validates if the solution code contains forbidden words.
+    """
+    for word in forbidden_words:
+        if word in solution_code:
+            return False, f"Uso de palabra prohibida: {word}"
+    return True, ""
+
+
+def check_recursion(solution_code, function_name):
+    """
+    Checks if the solution code uses recursion.
+    """
+    return solution_code.count(f"{function_name}(") >= 2
+
+
+def is_string(value):
+    """
+    Checks if the value is a string.
+    """
+    return isinstance(value, str)
 
 
 if __name__ == '__main__':

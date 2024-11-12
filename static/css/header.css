@@ -1,4 +1,3 @@
-
 header {
     background-color: #212E36;
     color: white;
@@ -26,13 +25,13 @@ header {
     justify-content: space-evenly;
 }
 
-#dropdown-toggle {
+.fa-caret-down {
     cursor: pointer;
 }
 
-.fa-bell {
-    color: #ffffff;
-    font-size: 20px;
+
+.history-link :hover {
+    color: #218838;
 }
 
 .dropdown-menu {
@@ -50,8 +49,16 @@ header {
 
 .dropdown-menu a {
     display: block;
-    color: rgb(197, 0, 0);
     text-decoration: none;
     padding: 5px 0;
+    color: rgb(197, 0, 0);
 }
 
+.dropdown-menu:hover {
+    background-color: #e2e2e2;
+}
+
+a {
+    text-decoration: none;
+    color: #ffffff;
+}

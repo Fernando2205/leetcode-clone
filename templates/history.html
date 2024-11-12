@@ -5,19 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Soluciones</title>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
 </head>
 
 <body>
-    <header>
-        <h1>Historial de Soluciones</h1>
-    </header>
+
+    {% include 'header.html' %}
+
+
     <main>
+        <h1>Historial de Soluciones</h1>
         <ul>
+
             {% for solution in solutions %}
             <li>
-                <a href="{{ url_for('view_solution', solution_id=solution['id'].split(': ')[1]) }}">
-                    {{ solution['Problem'] }} (ID: {{ solution['id'].split(': ')[1] }})
+                <a href="{{ url_for('view_solution', solution_id=solution.id) }}" style="color: #28c74b; ">
+                    Problema: {{ solution.problem.name }}
                 </a>
             </li>
             {% endfor %}

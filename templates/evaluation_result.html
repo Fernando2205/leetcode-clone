@@ -9,11 +9,10 @@
 </head>
 
 <body>
-    <header>
-        <h1>Resultado para el problema: {{ problem.name }}</h1>
-    </header>
+    {% include 'header.html' %}
 
     <main>
+        <h1>Resultado para el problema: {{ problem.name }}</h1>
         {% if is_string(result) %}
         <p class="err_msj">{{ result }}</p>
         {% else %}

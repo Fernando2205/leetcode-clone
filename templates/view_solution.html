@@ -9,10 +9,11 @@
 </head>
 
 <body>
-    <header>
-        <h1>Detalle de la solución</h1>
-    </header>
+    {% include 'header.html' %}
+
     <main>
+        <h1>Detalle de la solución</h1>
+
         <h2>Problema: {{ solution.problem.name }}</h2>
         <p><strong>Descripción:</strong> {{ solution.problem.description }}</p>
         <p><strong>Fecha de Envío:</strong> {{ solution.timestamp }}</p>

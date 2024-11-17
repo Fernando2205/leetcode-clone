@@ -27,8 +27,10 @@
                 {{ form.username(class="input", placeholder="Ingresa tu usuario") }}
                 <label for="password">Contraseña*</label>
                 {{ form.password(class="input", placeholder="Ingresa tu contraseña") }}
-                <label for="remember_me">Recuérdame</label>
-                {{ form.remember_me() }}
+                <label for="remember_me" style="display: flex; align-items: center; margin-top: 10px;">
+                    {{ form.remember_me(style="width: 16px; height: 16px; margin: 0; padding: 0;") }}
+                    <span style="margin-left: 8px;">Recuérdame</span>
+                </label>
                 <button type="submit" class="login-btn">Ingresar</button>
 
                 <div class="createAccount">

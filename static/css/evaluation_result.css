@@ -1,12 +1,5 @@
 @import url('/static/css/general-styles.css');
 
-header{
-    background-color: #212E36;
-    padding: 20px;
-    text-align: center;
-    color: white;
-    font-weight: 500;
-}
 
 body {
     background-color: #192229;
@@ -54,4 +47,3 @@ main {
 .back-btn:hover, .problems-btn:hover{
     background-color: #218838;
 }
-

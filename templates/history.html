@@ -20,17 +20,17 @@
 
             {% for solution in solutions %}
             <li>
-                <a href="{{ url_for('view_solution', solution_id=solution.id) }}" style="color: #28c74b; ">
+                <a href="{{ url_for('view_solution', solution_id=solution.id) }}" ">
                     Problema: {{ solution.problem.name }}
                 </a>
             </li>
             {% endfor %}
         </ul>
         {% else %}
-        <p class="no-solutions-text">No tienes soluciones enviadas</p>
-        {% endif %}
+        <p class=" no-solutions-text">No tienes soluciones enviadas</p>
+                    {% endif %}
 
-        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
+                    <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
     </main>
 </body>
 

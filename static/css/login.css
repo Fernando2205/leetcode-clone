@@ -106,3 +106,8 @@ label {
     padding-left: 10px;
     margin-bottom: 15px;
 }
+
+.message{
+    color: red;
+    margin-bottom: 7px;
+}

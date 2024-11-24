@@ -1,12 +1,12 @@
 @import url('/static/css/general-styles.css');
 
-body {
+.history-body {
     background-color: #192229;
     color: #C8CDD0;
     font-family: Arial, sans-serif;
 }
 
-main {
+.history-main {
     max-width: 800px;
     margin: 50px auto;
     padding: 20px;
@@ -16,16 +16,16 @@ main {
     text-align: center;
 }
 
-h1 {
+.history-title {
     color: #C8CDD0;
 }
 
-ul {
+.history-list {
     list-style-type: none;
     padding: 0;
 }
 
-li {
+.history-item {
     background-color: #2A3A47;
     margin: 10px 0;
     padding: 15px;
@@ -33,11 +33,11 @@ li {
     transition: background-color 0.3s;
 }
 
-li:hover {
+.history-item:hover {
     background-color: #1C252D;
 }
 
-a {
+.history-link {
     text-decoration: none;
     color: #ffffff;
 }
@@ -59,6 +59,6 @@ a {
     background-color: #218838;
 }
 
-.no-solutions-text{
+.no-solutions-text {
     margin: 10px 0 10px 0;
 }

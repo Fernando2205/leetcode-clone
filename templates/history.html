@@ -1,37 +1,31 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Soluciones</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
 </head>
-
-<body>
-
+<body class="history-body">
     {% include 'header.html' %}
 
-
-    <main>
-        <h1>Historial de Soluciones</h1>
-        {% if solution %}
-        <ul>
-
+    <main class="history-main">
+        <h1 class="history-title">Historial de Soluciones</h1>
+        {% if solutions %}
+        <ul class="history-list">
             {% for solution in solutions %}
-            <li>
-                <a href="{{ url_for('view_solution', solution_id=solution.id) }}" ">
+            <li class="history-item">
+                <a class="history-link" href="{{ url_for('view_solution', solution_id=solution.id) }}">
                     Problema: {{ solution.problem.name }}
                 </a>
             </li>
             {% endfor %}
         </ul>
         {% else %}
-        <p class=" no-solutions-text">No tienes soluciones enviadas</p>
-                    {% endif %}
+        <p class="no-solutions-text">No tienes soluciones enviadas</p>
+        {% endif %}
 
-                    <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
+        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
     </main>
 </body>
-
 </html>

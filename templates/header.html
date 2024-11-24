@@ -30,19 +30,19 @@
     </nav>
 </header>
 <script src="https://kit.fontawesome.com/e93ccfb9a4.js" crossorigin="anonymous"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const dropdownToggle = document.getElementById('dropdown-toggle');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-    
-            dropdownToggle.addEventListener('click', function (event) {
-                event.stopPropagation(); 
-                dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-            });
-    
-            
-            document.addEventListener('click', function () {
-                dropdownMenu.style.display = 'none';
-            });
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownToggle = document.getElementById('dropdown-toggle');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        dropdownToggle.addEventListener('click', function (event) {
+            event.stopPropagation();
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         });
-    </script>
+
+
+        document.addEventListener('click', function () {
+            dropdownMenu.style.display = 'none';
+        });
+    });
+</script>

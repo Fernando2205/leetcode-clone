@@ -16,6 +16,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/python-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/javascript-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/ruby/ruby.min.js"></script>
+
 </head>
 
 <body>
@@ -76,6 +78,13 @@
                 "float": "float",
                 "bool": "boolean",
                 "list": "List",
+            },
+            "Ruby": {
+                "int": "Integer",
+                "str": "String",
+                "float": "Float",
+                "bool": "Boolean",
+                "list": "Array",
             }
         };
         var templates = {
@@ -84,10 +93,14 @@
                 return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí\n  return`;
             },
             "Java": function (inputParams, outputType) {
-                let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
+                let params = inputParams.map(param => `${param.name}: ${typeMapping["Java"][param.type]}`).join(", ");
                 return `public class Solution {\n    public static ${typeMapping["Java"][outputType]} solution(${params}) {\n        // Implementa tu solución aquí\n    }\n}`;
+            },
+            "Ruby": function (inputParams, outputType) {
+                let params = inputParams.map(param => `${param.name}: ${typeMapping["Ruby"][param.type]}`).join(", ");
+                return `def solution(${params})\n  # Implementa tu solución aquí\n  return nil\nend`;
             }
-            //Templates for other languages will be added here
+
         };
 
         var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
@@ -109,10 +122,13 @@
                 baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
         }
         if (language === "Python") {
-            editor.setOption("mode", "python");
-        } else if (language === "Java") {
-            editor.setOption("mode", "text/x-java");
-        }
+                editor.setOption("mode", "python");
+            } else if (language === "Java") {
+                editor.setOption("mode", "text/x-java");
+            } else if (language === "Ruby") {
+                editor.setOption("mode", "ruby");
+            }
+
         editor.setValue(baseCode);
         }
     </script>

@@ -16,9 +16,14 @@ p {
     color :#C8CDD0;
 }
 
-main h2{
+.title{
     color :#C8CDD0;
+    font-size: 36px;
     
+}
+.subtitle{
+    margin-top: 5px;
+    font-size: 16px;
 }
 
 /* problemas */

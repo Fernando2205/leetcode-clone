@@ -58,3 +58,7 @@ a {
 .problems-btn:hover {
     background-color: #218838;
 }
+
+.no-solutions-text{
+    margin: 10px 0 10px 0;
+}

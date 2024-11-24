@@ -8,14 +8,14 @@ to solve programming problems and submit their solutions for evaluation.
 import os
 import re
 import json
-from flask import Flask, redirect, render_template, request, url_for, flash
+from flask import Flask, redirect, render_template, request, url_for, flash, current_app
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from db import db
 from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
 from models import Solution, User, Problem
 from forms import LoginForm, SignupForm
-
+import subprocess 
 
 app = Flask(__name__)
 
@@ -134,12 +134,14 @@ def submit_solution():
 
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
-    # elif language == 'Java':
-        # result = evaluate_java_code(solution_code, test_cases)
+    elif language == 'Java':
+        result = evaluate_java_code(solution_code, test_cases)
+    elif language == 'Ruby':
+        result = evaluate_ruby_code(solution_code, test_cases)
     else:
         result = "Lenguaje no soportado"
 
-    # Asegúrate de convertir el resultado a JSON antes de almacenarlo
+    # convertir el resultado a JSON antes de almacenarlo
 
     solution = Solution(user_id=current_user.id,
                         problem_id=problem.id, code=solution_code, result=json.dumps(result))
@@ -184,11 +186,115 @@ def evaluate_python_code(solution_code, test_cases):
     return results
 
 
-# def evaluate_java_code(solution_code, test_cases):
-#     """
-#     Evaluates the solution code in Java (to be implemented).
+def evaluate_java_code(solution_code, test_cases): 
+    """
+    Evaluates the solution code in Java using test cases.
+    """
+    results = []
+    
+    # directorio guardar archivo Java 
+    carpeta_instance = "instance"
+    carpeta_soluciones_java = os.path.join(carpeta_instance, 'soluciones_java')
+    
+    for test_case in test_cases:
+        try:
+            os.makedirs(carpeta_soluciones_java, exist_ok=True)
+            
+            rutasolucion = os.path.join(carpeta_soluciones_java, 'Solution.java')
+            with open(rutasolucion, 'w', encoding='utf-8') as f:
+                f.write(solution_code)
+            
+            compilar_codigojava = subprocess.run(
+                ["javac", rutasolucion], #java neceita ser compilado con javac
+                capture_output=True,
+                text=True
+            )
 
-#     """
+            if compilar_codigojava.returncode != 0:
+                results.append({
+                    "input": test_case["input"],
+                    "expected_output": test_case["expected_output"],
+                    "user_output": compilar_codigojava.stderr,
+                    "passed": False
+                })
+            else:
+                elementosastring = [str(x) for x in test_case["input"]]
+                ejecutarjava = subprocess.run(
+                    ["java", "-cp", carpeta_soluciones_java, "Solution"] + elementosastring,
+                    capture_output=True,#capturaar salida
+                    text=True,
+                    timeout=5
+                )
+
+                output = ejecutarjava.stdout.strip() #stdout = salida
+                expected = str(test_case["expected_output"]).strip()
+                
+                results.append({
+                    "input": test_case["input"],
+                    "expected_output": expected,
+                    "user_output": output,
+                    "passed": output == expected
+                })
+            
+        except Exception as e:
+            results.append({
+                "input": test_case["input"],
+                "expected_output": test_case["expected_output"],
+                "user_output": f"Error: {str(e)}",
+                "passed": False
+            })
+
+    return results
+
+
+def evaluate_ruby_code(solution_code, test_cases):
+    """
+    Evaluates the solution code in Ruby using test cases.
+    """
+    results = []
+    
+    # directorio guardar archivo Ruby 
+    carpeta_instance = "instance"
+    carpeta_soluciones_ruby = os.path.join(carpeta_instance, 'soluciones_ruby')
+    
+    for test_case in test_cases:
+        try:
+            os.makedirs(carpeta_soluciones_ruby, exist_ok=True)
+            
+            rutasolucion = os.path.join(carpeta_soluciones_ruby, 'solution.rb')
+            with open(rutasolucion, 'w', encoding='utf-8') as f:
+                f.write(solution_code)
+            
+            elementosastring = [str(x) for x in test_case["input"]]
+            ejecutarruby = subprocess.run(
+                ["ruby", rutasolucion] + elementosastring,
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+
+            output = ejecutarruby.stdout.strip()
+            expected = str(test_case["expected_output"]).strip()
+            
+            results.append({
+                "input": test_case["input"],
+                "expected_output": expected,
+                "user_output": output,
+                "passed": output == expected
+            })
+            
+        except Exception as e:
+            results.append({
+                "input": test_case["input"],
+                "expected_output": test_case["expected_output"],
+                "user_output": f"Error: {str(e)}",
+                "passed": False
+            })
+
+    return results
+
+    
+
 @app.route('/history')
 @login_required
 def history():

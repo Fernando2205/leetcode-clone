@@ -1,0 +1,33 @@
+Fizzbuzz java:
+
+public class Solution {
+
+    public static void main(String[] args) {
+        int n = Integer.parseInt(args[0]);
+        System.out.println(solution(n));
+    }
+
+    public static String solution(int n) {
+        // posibles respuestas
+        String[] respuestas = {Integer.toString(n), "Fizz", "Buzz", "FizzBuzz"};
+        int indice = ((n % 3 == 0) ? 1 : 0) + ((n % 5 == 0) ? 2 : 0);
+        return respuestas[indice];
+    }
+}
+
+fizzbuzz ruby
+
+def solution(n)
+  # posibles respuestas
+  respuestas = [n.to_s, "Fizz", "Buzz", "FizzBuzz"] #n.to_s = numero a string
+
+  divisible_por_3 = n % 3 == 0 ? 1 : 0  # 1 si divisible 0 si no
+  divisible_por_5 = n % 5 == 0 ? 1 : 0  
+
+  indice = divisible_por_3 + 2 * divisible_por_5
+
+  respuestas[indice]
+end
+
+n = ARGV[0].to_i #ARGV tiene elementos del prog desde q se ejrcuta -- conv a num
+puts solution(n)

@@ -193,8 +193,8 @@ def evaluate_java_code(solution_code, test_cases):
     results = []
     
     # directorio guardar archivo Java 
-    carpeta_instance = "instance"
-    carpeta_soluciones_java = os.path.join(carpeta_instance, 'soluciones_java')
+    carpeta_codigos = "codigos"
+    carpeta_soluciones_java = os.path.join(carpeta_codigos, 'soluciones_java')
     
     for test_case in test_cases:
         try:
@@ -254,8 +254,8 @@ def evaluate_ruby_code(solution_code, test_cases):
     results = []
     
     # directorio guardar archivo Ruby 
-    carpeta_instance = "instance"
-    carpeta_soluciones_ruby = os.path.join(carpeta_instance, 'soluciones_ruby')
+    carpeta_codigos = "codigos"
+    carpeta_soluciones_ruby = os.path.join(carpeta_codigos, 'soluciones_ruby')
     
     for test_case in test_cases:
         try:

@@ -15,22 +15,22 @@
 
     <main>
         <h1>Historial de Soluciones</h1>
-        {% if solution %}
+        {% if solutions %}
         <ul>
 
             {% for solution in solutions %}
-            <li>
-                <a href="{{ url_for('view_solution', solution_id=solution.id) }}" ">
+            <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
+                <li>
                     Problema: {{ solution.problem.name }}
-                </a>
-            </li>
+                </li>
+            </a>
             {% endfor %}
         </ul>
         {% else %}
         <p class=" no-solutions-text">No tienes soluciones enviadas</p>
-                    {% endif %}
+        {% endif %}
 
-                    <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
+        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
     </main>
 </body>
 

@@ -3,10 +3,11 @@ from main import app, db
 from models import Problem
 
 problems = [{
+
     'name': 'FizzBuzz',
     'description':
     'Crear una función que reciba un número entero y retorne Fizz si es multiplo de 3, Buzz si es multiplo de 5, FizzBuzz si es multiplo de ambos o su representación en cadena en cualquier otro caso',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': ['if'],
     'recursive': True,
     'input_params': [{
@@ -36,7 +37,7 @@ problems = [{
     'Binary Search',
     'description':
     'Dada una lista ordenada de enteros positivos y un objetivo, implementar busqueda binaria para obtener el indice del objetivo dentro de la lista, en caso de no existir retornar -1',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive':
     True,
@@ -71,7 +72,7 @@ problems = [{
     'name': 'Factorial',
     'description':
     'Escribe una función que permita calcular el factorial de un numero entero positivo, si la entrada es negativa retornar -1',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -100,7 +101,7 @@ problems = [{
     'name': 'Integer to Roman',
     'description':
     'Convertir un número entero entre 1 y 3999 a su representación en números romanos.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -127,7 +128,7 @@ problems = [{
     'name': 'Roman to Integer',
     'description':
     'Convertir una cadena de números romanos a su representación en números enteros.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -154,7 +155,7 @@ problems = [{
     'name': 'Money (USD) to English',
     'description':
     'Convertir una cantidad de dinero en dólares a su representación en palabras en inglés.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -182,7 +183,7 @@ problems = [{
     'name': 'Palindromo',
     'description':
     'Determinar si una cadena es un palíndromo. Un palindromo es una palabra o frase cuyas letras están dispuestas de tal manera que resulta la misma leída de izquierda a derecha que de derecha a izquierda',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -209,7 +210,7 @@ problems = [{
     'name': 'Sum of Two Numbers',
     'description':
     'Dada una lista de números y un objetivo, encontrar dos números en la lista que sumen el objetivo.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -238,7 +239,7 @@ problems = [{
 }, {'name': 'Valid Number',
     'description':
     'Dada una cadena retornar true o false si es un número válido teniendo en cuenta que un número es valido unicamente si es un numero entero, decimal o elevado a una potencia usando e como indicador de potencia.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -268,7 +269,7 @@ problems = [{
     'name': 'Valid Parentheses',
     'description':
     'Determinar si una cadena de paréntesis es válida.',
-    'languages': ['Python', 'Java'],
+    'languages': ['Python', 'Java', 'Ruby'],
     'forbidden_words': [],
     'recursive': False,
     'input_params': [{
@@ -292,22 +293,32 @@ problems = [{
         {"input": ["()[]{}"], "expected_output": True},
     ]
 }]
+
 with app.app_context():
     db.create_all()
     for problem_data in problems:
-        problem = Problem(
-            name=problem_data['name'],
-            description=problem_data['description'],
-            languages=json.dumps(problem_data['languages']),
-            forbidden_words=json.dumps(
-                problem_data['forbidden_words']),
-            recursive=problem_data['recursive'],
-            input_params=json.dumps(
-                problem_data['input_params']),
-            output_type=problem_data['output_type'],
-            examples=json.dumps(problem_data['examples']),
-            test_cases=json.dumps(
-                problem_data['test_cases'])
-        )
-        db.session.add(problem)
+        problem = Problem.query.filter_by(name=problem_data['name']).first()
+        if problem:
+            problem.description = problem_data['description']
+            problem.languages = json.dumps(problem_data['languages'])
+            problem.forbidden_words = json.dumps(
+                problem_data['forbidden_words'])
+            problem.recursive = problem_data['recursive']
+            problem.input_params = json.dumps(problem_data['input_params'])
+            problem.output_type = problem_data['output_type']
+            problem.examples = json.dumps(problem_data['examples'])
+            problem.test_cases = json.dumps(problem_data['test_cases'])
+        else:
+            problem = Problem(
+                name=problem_data['name'],
+                description=problem_data['description'],
+                languages=json.dumps(problem_data['languages']),
+                forbidden_words=json.dumps(problem_data['forbidden_words']),
+                recursive=problem_data['recursive'],
+                input_params=json.dumps(problem_data['input_params']),
+                output_type=problem_data['output_type'],
+                examples=json.dumps(problem_data['examples']),
+                test_cases=json.dumps(problem_data['test_cases'])
+            )
+            db.session.add(problem)
     db.session.commit()

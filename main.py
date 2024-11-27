@@ -7,7 +7,10 @@ to solve programming problems and submit their solutions for evaluation.
 """
 import os
 import re
+import subprocess
 import json
+import tempfile
+from typing import Any
 from flask import Flask, redirect, render_template, request, url_for, flash
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from db import db
@@ -35,7 +38,7 @@ def loadUser(user_id):
 
 
 @app.before_request
-def create_tables():
+def create_tables() -> None:
     if not hasattr(app, 'tables_created'):
         db.create_all()
         app.tables_crrated = True
@@ -131,18 +134,22 @@ def submit_solution():
         return render_template('evaluation_result.html', result="Error: No se admite solución recursiva", problem=problem, is_string=is_string)
 
     test_cases = json.loads(problem.test_cases)
-
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
     # elif language == 'Java':
-        # result = evaluate_java_code(solution_code, test_cases)
+    #     result = evaluate_java_code(solution_code, test_cases, input_params)
+    elif language == 'Ruby':
+        result = evaluate_ruby_code(solution_code, test_cases)
     else:
         result = "Lenguaje no soportado"
 
-    # Asegúrate de convertir el resultado a JSON antes de almacenarlo
+    # Store solution
+    solution = Solution(
+        user_id=current_user.id,
+        problem_id=problem.id,
+        code=solution_code,
+        result=json.dumps(result))
 
-    solution = Solution(user_id=current_user.id,
-                        problem_id=problem.id, code=solution_code, result=json.dumps(result))
     db.session.add(solution)
     db.session.commit()
 
@@ -152,6 +159,31 @@ def submit_solution():
 @app.route('/register', methods=['GET'])
 def show_register():
     return render_template('register.html')
+
+
+@app.route('/history')
+@login_required
+def history():
+    """
+    Displays the history of solutions submitted by the user.
+    """
+    solutions = Solution.query.options(joinedload(
+        Solution.problem)).filter_by(user_id=current_user.id).all()
+    for solution in solutions:
+        solution.result = json.loads(solution.result)
+    return render_template('history.html', solutions=solutions)
+
+
+@app.route('/solution/<int:solution_id>')
+@login_required
+def view_solution(solution_id):
+    """
+    Displays the details of a specific solution.
+    """
+    solution = Solution.query.options(joinedload(
+        Solution.problem)).get_or_404(solution_id)
+    solution.result = json.loads(solution.result)
+    return render_template('view_solution.html', solution=solution,)
 
 
 def evaluate_python_code(solution_code, test_cases):
@@ -184,34 +216,80 @@ def evaluate_python_code(solution_code, test_cases):
     return results
 
 
-# def evaluate_java_code(solution_code, test_cases):
-#     """
-#     Evaluates the solution code in Java (to be implemented).
+def evaluate_ruby_code(solution_code, test_cases):
+    """
+    Evaluates Ruby code with test cases
+    """
+    results = []
 
-#     """
-@app.route('/history')
-@login_required
-def history():
-    """
-    Displays the history of solutions submitted by the user.
-    """
-    solutions = Solution.query.options(joinedload(
-        Solution.problem)).filter_by(user_id=current_user.id).all()
-    for solution in solutions:
-        solution.result = json.loads(solution.result)
-    return render_template('history.html', solutions=solutions)
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Write solution code to file
+        solution_file_path = os.path.join(temp_dir, 'solution.rb')
+        wrapped_code = wrap_ruby_code(solution_code)
+
+        with open(solution_file_path, 'w', encoding='utf-8') as f:
+            f.write(wrapped_code)
+
+        # Run tests
+        for test_case in test_cases:
+            try:
+                input_data = [str(arg) for arg in test_case['input']]
+                expected_output = test_case['expected_output']
+
+                # Run Ruby code
+                process = subprocess.run(
+                    ['ruby', solution_file_path] + input_data,
+                    capture_output=True,
+                    text=True
+                )
+
+                if process.returncode != 0:
+                    raise Exception(process.stderr)
+
+                # Get output and convert to appropriate type
+                user_output = process.stdout.strip()
+                converted_output = convert_output(user_output, expected_output)
+
+                results.append({
+                    'input': test_case['input'],
+                    'expected_output': expected_output,
+                    'user_output': converted_output,
+                    'passed': converted_output == expected_output
+                })
+
+            except Exception as e:
+                results.append({
+                    'input': test_case['input'],
+                    'expected_output': expected_output,
+                    'user_output': str(e),
+                    'passed': False
+                })
+
+    return results
 
 
-@app.route('/solution/<int:solution_id>')
-@login_required
-def view_solution(solution_id):
+def wrap_ruby_code(solution_code):
+    return f"""
+{solution_code}
+
+# Ensure first argument is converted to integer
+n = ARGV[0].to_i
+result = solution(n)
+puts result.to_s
+"""
+
+
+def convert_output(user_output: str, expected_type: Any) -> Any:
     """
-    Displays the details of a specific solution.
+    Converts the Ruby output string to the expected Python type
     """
-    solution = Solution.query.options(joinedload(
-        Solution.problem)).get_or_404(solution_id)
-    solution.result = json.loads(solution.result)
-    return render_template('view_solution.html', solution=solution,)
+    if isinstance(expected_type, bool):
+        return user_output.lower() == 'true'
+    elif isinstance(expected_type, int):
+        return int(user_output)
+    elif isinstance(expected_type, float):
+        return float(user_output)
+    return user_output
 
 
 def validate_forbidden_words(solution_code, forbidden_words):

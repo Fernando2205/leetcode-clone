@@ -21,7 +21,7 @@
             {% for solution in solutions %}
             <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
                 <li>
-                    Problema: {{ solution.problem.name }}
+                    {{ solution.id }}. Problema: {{ solution.problem.name }}
                 </li>
             </a>
             {% endfor %}

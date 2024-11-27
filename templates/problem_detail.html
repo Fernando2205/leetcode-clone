@@ -5,17 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resolver {{ problem.name }}</title>
-    <link rel="stylesheet" href="/static/css/problem_detail.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/problem_detail.css') }}">
+    <!-- CodeMirror core -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+
+    <!-- Lenguajes -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/ruby/ruby.min.js"></script>
+
+    <!-- Autocompletado -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/python-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/javascript-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
+
+    <!-- Brackets y paréntesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+
+    <!-- CodeMirror themes -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/isotope.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-night.min.css">
 </head>
 
 <body>
@@ -68,6 +81,19 @@
     </main>
 
     <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
+            lineNumbers: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            theme: "3024-night",
+            extraKeys: {
+                "Ctrl-Space": "autocomplete",
+            },
+            hintOptions: {
+                hint: CodeMirror.hint.anyword
+            }
+        });
+
         var typeMapping = {
             // Map Python data types to other languages
             "Java": {
@@ -76,45 +102,102 @@
                 "float": "float",
                 "bool": "boolean",
                 "list": "List",
-            }
+                "list[int]": "int[]",
+            },
         };
+
         var templates = {
             "Python": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
-                return `def solution(${params}) -> ${outputType}:\n  # Implementa tu solución aquí\n  return`;
+                return `def solution(${params}) -> ${outputType}:
+    # Implementa tu solución aquí
+
+    return
+    `;
             },
             "Java": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
-                return `public class Solution {\n    public static ${typeMapping["Java"][outputType]} solution(${params}) {\n        // Implementa tu solución aquí\n    }\n}`;
-            }
-            //Templates for other languages will be added here
-        };
+                // Usando 4 espacios para la indentación estándar de Java
+                return `class Solution {
+    public static ${typeMapping["Java"][outputType]} solution(${params}) {
+        // Implementa tu solución aquí
+        
+    }
+}`;
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
-            lineNumbers: true,
-            mode: "python",
-            theme: "tomorrow-night-bright",
-            autoCloseBrackets: true,
-            matchBrackets: true,
-            lineWrapping: true,
-            extraKeys: { "Ctrl-Space": "autocomplete" },
-        });
+            },
+
+            "Ruby": function (inputParams, outputType) {
+                let params = inputParams.map(param => param.name).join(", ");
+                let typeComments = inputParams.map(param =>
+                    `# @param ${param.name} [${param.type}]`).join("\n");
+                return `# Tipos de parámetros:
+${typeComments}
+# @return [${outputType}]
+def solution(${params})
+  # Implementa tu solución aquí
+  
+end`;
+            }
+
+        };
 
         function updateEditor() {
             var language = document.getElementById("language").value;
             var baseCode = '';
-
             if (templates[language]) {
-
                 baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
         }
-        if (language === "Python") {
-            editor.setOption("mode", "python");
-        } else if (language === "Java") {
-            editor.setOption("mode", "text/x-java");
-        }
         editor.setValue(baseCode);
+
+        // Proteger áreas no editables
+        var doc = editor.getDoc();
+        var lines = baseCode.split('\n');
+
+        if (language === "Python") {
+            var defLine = doc.getLine(0);
+            doc.markText({ line: 0, ch: 0 }, { line: 0, ch: defLine.length }, {
+                readOnly: true,
+                className: 'readonly-section'
+            });
+            // Posicionar el cursor después del comentario
+            editor.setCursor(2, 4);
+        } else if (language === "Java") {
+            doc.markText({ line: 0, ch: 0 }, { line: 1, ch: 0 }, {
+                readOnly: true,
+                className: 'readonly-section'
+            });
+            doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
+                readOnly: true,
+                className: 'readonly-section'
+            });
+            // Posicionar el cursor después del comentario
+            editor.setCursor(3, 8);
+        } else if (language === "Ruby") {
+            doc.markText({ line: 0, ch: 0 }, { line: 0, ch: lines[0].length }, {
+                readOnly: true,
+                className: 'readonly-section'
+            });
+            doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
+                readOnly: true,
+                className: 'readonly-section'
+            });
+            // Posicionar el cursor después del comentario
+            editor.setCursor(2, 2);
         }
+        }
+
+        editor.setOption("mode", language === "Python" ? "python" :
+            language === "Java" ? "text/x-java" : "text/x-ruby");
+
+        // Agregar estilos para las secciones de solo lectura
+        var style = document.createElement('style');
+        style.textContent = `
+.readonly-section {
+    background-color: rgba(0,0,0,0.1);
+    cursor: not-allowed;
+}`;
+        document.head.appendChild(style);
     </script>
 
 </body>

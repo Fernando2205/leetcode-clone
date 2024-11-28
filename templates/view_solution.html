@@ -9,14 +9,16 @@
 
 
 {% block content %}
-
+<h1 style="text-align: center; margin: 20px 0 20px 0;">Detalle de la solución</h1>
 <main>
-    <h1>Detalle de la solución</h1>
 
-    <h2>Problema: {{ solution.problem.name }}</h2>
-    <p><strong>Descripción:</strong> {{ solution.problem.description }}</p>
-    <p><strong>Fecha de Envío:</strong> {{ solution.timestamp }}</p>
-    <p><strong>Tu Código:</strong></p>
+    <div class="info">
+        <h2><strong>Problema:</strong> {{ solution.problem.name }}</h2>
+        <p><strong>Descripción:</strong> {{ solution.problem.description }}</p>
+        <p><strong>Fecha de Envío:</strong> {{ solution.timestamp }}</p>
+        <p><strong>Tu Código:</strong></p>
+    </div>
+
     <pre class="solution-code">{{ solution.code }}</pre>
     <p><strong>Resultado:</strong></p>
     <table class="table_results">

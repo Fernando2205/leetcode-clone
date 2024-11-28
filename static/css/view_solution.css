@@ -107,3 +107,11 @@ main {
 .solution-code::-webkit-scrollbar-thumb:hover {
     background: #364B5D;
 }
+
+.info {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px
+}

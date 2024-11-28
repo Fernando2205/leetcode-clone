@@ -1,3 +1,5 @@
+from datetime import datetime
+from pytz import timezone
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
@@ -35,9 +37,16 @@ class Solution(db.Model):
         'problem.id'), nullable=False)
     code = db.Column(db.Text, nullable=False)
     result = db.Column(db.String(50), nullable=False)
-    timestamp = db.Column(db.DateTime, nullable=False,
-                          default=db.func.current_timestamp())
+    timestamp = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship('User', backref=db.backref('solutions', lazy=True))
     problem = db.relationship(
         'Problem', backref=db.backref('solutions', lazy=True))
+
+    def __init__(self, **kwargs):
+        super(Solution, self).__init__(**kwargs)
+        local_tz = timezone('America/Bogota')
+        current_time = datetime.now(local_tz)
+        # Format time as HH:MM:SS
+        self.timestamp = current_time.replace(
+            tzinfo=None).replace(microsecond=0)

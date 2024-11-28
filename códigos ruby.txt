@@ -1,0 +1,164 @@
+Fizzbuzz
+
+  respuestas = [n.to_s, "Fizz", "Buzz", "FizzBuzz"]
+  divisible_por_3 = n % 3 == 0 ? 1 : 0
+  divisible_por_5 = n % 5 == 0 ? 1 : 0
+  indice = divisible_por_3 + 2 * divisible_por_5
+  respuestas[indice]
+
+Binary Search
+  left = 0
+  right = arr.length - 1
+  
+  while left <= right
+    mid = (left + right) / 2
+    return mid if arr[mid] == target
+    
+    if arr[mid] < target
+      left = mid + 1
+    else
+      right = mid - 1
+    end
+  end
+  
+  -1
+
+Palindromo
+  s == s.reverse
+
+Valid number
+  # Convert to string if numeric
+  s = s.to_s if s.is_a?(Numeric)
+  
+  # Remove leading/trailing whitespace
+  s = s.strip
+  
+  # Try to convert to float, return false if it fails
+  begin
+    Float(s)
+    true
+  rescue ArgumentError
+    false
+  end
+
+Sum of two numbers
+
+  hash = {}
+  
+  nums.each_with_index do |num, i|
+    complement = target - num
+    return [num, complement] if hash[complement]
+    hash[num] = i
+  end
+  
+  []
+
+Roman to Integer
+
+  roman = {
+    'I' => 1, 
+    'V' => 5, 
+    'X' => 10, 
+    'L' => 50, 
+    'C' => 100, 
+    'D' => 500, 
+    'M' => 1000
+  }
+  
+  total = 0
+  prev_value = 0
+  
+  s.reverse.each_char do |c|
+    curr_value = roman[c]
+    if curr_value >= prev_value
+      total += curr_value
+    else
+      total -= curr_value
+    end
+    prev_value = curr_value
+  end
+  
+  total
+
+Integer to roman
+
+
+Valid parentheses
+
+  stack = []
+  pairs = {')' => '(', ']' => '[', '}' => '{'}
+  
+  s.each_char do |c|
+    if '([{'.include?(c)
+      stack.push(c)
+    elsif pairs[c]
+      return false if stack.empty? || stack.pop != pairs[c]
+    end
+  end
+  
+  stack.empty?
+
+Money to words
+
+  # Helper methods remain the same
+  def under_20(n)
+    words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 
+             'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+             'sixteen', 'seventeen', 'eighteen', 'nineteen']
+    words[n]
+  end
+  
+  def tens(n)
+    words = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy',
+             'eighty', 'ninety']
+    words[n]
+  end
+  
+  def convert_hundreds(n)
+    if n >= 100
+      "#{under_20(n / 100)} hundred #{convert_tens(n % 100)}".strip
+    else
+      convert_tens(n)
+    end
+  end
+  
+  def convert_tens(n)
+    if n < 20
+      under_20(n)
+    else
+      term = tens(n / 10)
+      term += "-#{under_20(n % 10)}" if n % 10 > 0
+      term
+    end
+  end
+  
+  # Main conversion
+  dollars = amount.to_i
+  cents = ((amount - dollars) * 100).round
+  
+  return "zero dollars" if dollars == 0 && cents == 0
+  
+  parts = []
+  
+  if dollars > 0
+    billions = dollars / 1_000_000_000
+    millions = (dollars % 1_000_000_000) / 1_000_000
+    thousands = (dollars % 1_000_000) / 1_000
+    remainder = dollars % 1_000
+    
+    parts << "#{convert_hundreds(billions)} billion" if billions > 0
+    parts << "#{convert_hundreds(millions)} million" if millions > 0
+    parts << "#{convert_hundreds(thousands)} thousand" if thousands > 0
+    parts << convert_hundreds(remainder) if remainder > 0 || dollars == 0
+    
+    parts = [parts.join(' ').strip, 'dollars']
+    
+    parts << "and #{convert_tens(cents)} cents" if cents > 0
+  else
+    # Only cents, no "and" needed
+    parts << "#{convert_tens(cents)} cents" if cents > 0
+  end
+  
+  parts.join(' ')
+
+

@@ -321,4 +321,5 @@ with app.app_context():
                 test_cases=json.dumps(problem_data['test_cases'])
             )
             db.session.add(problem)
+    print("Problems uploaded")
     db.session.commit()

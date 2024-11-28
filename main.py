@@ -11,13 +11,13 @@ import subprocess
 import json
 import tempfile
 from typing import Any
-from flask import Flask, redirect, render_template, request, url_for, flash
-from flask_login import LoginManager, current_user, login_required, login_user, logout_user
-from db import db
-from sqlalchemy.orm import joinedload
 from urllib.parse import urlparse
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+from flask import Flask, redirect, render_template, request, url_for, flash
+from sqlalchemy.orm import joinedload
 from models import Solution, User, Problem
 from forms import LoginForm, SignupForm
+from db import db
 
 
 app = Flask(__name__)
@@ -33,7 +33,7 @@ login_manager.login_view = "login"
 
 
 @login_manager.user_loader
-def loadUser(user_id):
+def load_user(user_id):
     return User.query.get(int(user_id))
 
 
@@ -153,7 +153,6 @@ def submit_solution():
 
     db.session.add(solution)
     db.session.commit()
-
     return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
 
@@ -245,7 +244,8 @@ def evaluate_ruby_code(solution_code, test_cases):
                 process = subprocess.run(
                     ['ruby', solution_file_path] + input_data,
                     capture_output=True,
-                    text=True
+                    text=True,
+                    check=False
                 )
 
                 if process.returncode != 0:
@@ -300,7 +300,8 @@ def evaluate_java_code(solution_code: str, test_cases: list, input_params: list)
         compile_process = subprocess.run(
             ['javac', solution_path, main_path],
             capture_output=True,
-            text=True
+            text=True,
+            check=False
         )
 
         # Check compilation errors
@@ -322,7 +323,8 @@ def evaluate_java_code(solution_code: str, test_cases: list, input_params: list)
                 process = subprocess.run(
                     ['java', '-cp', temp_dir, 'Main'] + input_data,
                     capture_output=True,
-                    text=True
+                    text=True,
+                    check=False
                 )
 
                 if process.returncode != 0:

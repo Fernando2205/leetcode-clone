@@ -134,10 +134,11 @@ def submit_solution():
         return render_template('evaluation_result.html', result="Error: No se admite solución recursiva", problem=problem, is_string=is_string)
 
     test_cases = json.loads(problem.test_cases)
+    input_params = json.loads(problem.input_params)
     if language == 'Python':
         result = evaluate_python_code(solution_code, test_cases)
-    # elif language == 'Java':
-    #     result = evaluate_java_code(solution_code, test_cases, input_params)
+    elif language == 'Java':
+        result = evaluate_java_code(solution_code, test_cases, input_params)
     elif language == 'Ruby':
         result = evaluate_ruby_code(solution_code, test_cases)
     else:
@@ -279,6 +280,83 @@ def evaluate_ruby_code(solution_code, test_cases):
     return results
 
 
+def evaluate_java_code(solution_code: str, test_cases: list, input_params: list) -> list:
+    """Evaluates Java code with test cases"""
+    results = []
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        # Write Solution.java
+        solution_path = os.path.join(temp_dir, 'Solution.java')
+        with open(solution_path, 'w', encoding='utf-8') as f:
+            f.write(solution_code)
+
+        # Write Main.java with wrapper
+        wrapper_code = wrap_java_code(input_params)
+        main_path = os.path.join(temp_dir, 'Main.java')
+        with open(main_path, 'w', encoding='utf-8') as f:
+            f.write(wrapper_code)
+
+        # Compile Java files
+        compile_process = subprocess.run(
+            ['javac', solution_path, main_path],
+            capture_output=True,
+            text=True
+        )
+
+        # Check compilation errors
+        if compile_process.returncode != 0:
+            return [{
+                'input': '',
+                'expected_output': '',
+                'user_output': compile_process.stderr,
+                'passed': False
+            }]
+
+        # Run tests
+        for test_case in test_cases:
+            try:
+                input_data = [str(arg) for arg in test_case['input']]
+                expected_output = test_case['expected_output']
+
+                # Run Java code
+                process = subprocess.run(
+                    ['java', '-cp', temp_dir, 'Main'] + input_data,
+                    capture_output=True,
+                    text=True
+                )
+
+                if process.returncode != 0:
+                    raise Exception(process.stderr)
+
+                # Convert output and compare
+                user_output = process.stdout.strip()
+                converted_output = convert_output(user_output, expected_output)
+                passed = False
+
+                if isinstance(expected_output, list):
+                    passed = sorted(converted_output) == sorted(
+                        expected_output)
+                else:
+                    passed = converted_output == expected_output
+
+                results.append({
+                    'input': test_case['input'],
+                    'expected_output': expected_output,
+                    'user_output': converted_output,
+                    'passed': passed
+                })
+
+            except Exception as e:
+                results.append({
+                    'input': test_case['input'],
+                    'expected_output': expected_output,
+                    'user_output': str(e),
+                    'passed': False
+                })
+
+    return results
+
+
 def wrap_ruby_code(solution_code: str) -> str:
     normalized_code = solution_code.replace('\r\n', '\n')
 
@@ -345,6 +423,53 @@ def convert_output(user_output: str, expected_type: Any) -> Any:
         return user_output
 
     return user_output
+
+
+def wrap_java_code(input_params: list) -> str:
+    param_conversions = []
+    solution_params = []
+
+    for i, param in enumerate(input_params):
+        param_name = f"parsed_arg_{i}"
+
+        if param['type'] == 'list[int]':
+            param_conversions.append(f"""
+            String[] arrayStr = args[{i}].substring(1, args[{i}].length()-1).split(",");
+            int[] {param_name};
+            if (arrayStr.length == 1 && arrayStr[0].trim().isEmpty()) {{
+                {param_name} = new int[0];  // Handle empty array case
+            }} else {{
+                {param_name} = new int[arrayStr.length];
+                for (int j = 0; j < arrayStr.length; j++) {{
+                    {param_name}[j] = Integer.parseInt(arrayStr[j].trim());
+                }}
+            }}""")
+        else:
+            type_conversions = {
+                'int': f"int {param_name} = Integer.parseInt(args[{i}]);",
+                'str': f"String {param_name} = args[{i}];",
+                'bool': f"boolean {param_name} = Boolean.parseBoolean(args[{i}]);",
+                'float': f"float {param_name} = Float.parseFloat(args[{i}]);"
+            }
+            param_conversions.append(type_conversions.get(
+                param['type'], f"String {param_name} = args[{i}];"))
+
+        solution_params.append(param_name)
+
+    return f"""
+public class Main {{
+    public static void main(String[] args) {{
+        try {{
+            Solution solution = new Solution();
+            {chr(10).join(param_conversions)}
+
+            Object result = solution.solution({', '.join(solution_params)});
+            System.out.println(result);
+        }} catch (Exception e) {{
+            System.err.println(e.getMessage());
+        }}
+    }}
+}}"""
 
 
 def validate_forbidden_words(solution_code, forbidden_words):

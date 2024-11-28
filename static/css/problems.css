@@ -1,7 +1,7 @@
 @import url(../css/general-styles.css);
 
 
-body{
+body {
     background-color: #192229;
 }
 
@@ -11,17 +11,19 @@ main {
     text-align: center;
     margin: 0 auto;
 }
+
 p {
     font-size: 18px;
-    color :#C8CDD0;
+    color: #C8CDD0;
 }
 
-.title{
-    color :#C8CDD0;
+.title {
+    color: #C8CDD0;
     font-size: 36px;
-    
+
 }
-.subtitle{
+
+.subtitle {
     margin-top: 5px;
     font-size: 16px;
 }
@@ -51,9 +53,10 @@ p {
     font-size: 1.1rem;
 }
 
-.problem-container:hover{
+.problem-container:hover {
     scale: 1.1;
 }
+
 .problem-container h3 {
     font-size: 22px;
     font-weight: 500;
@@ -64,7 +67,8 @@ p {
     text-align: justify;
     color: #C8CDD0;
 }
-.problem-container button{
+
+.problem-container button {
     color: white;
     font-weight: 400;
     font-size: 1em;
@@ -74,11 +78,11 @@ p {
     border: none;
     background-color: #4CAF50;
     align-self: center;
-transition:0.5s;
+    transition: 0.5s;
 
 }
 
-.problem-container button:hover{
+.problem-container button:hover {
     background-color: #3e8e41;
-    cursor:pointer;
+    cursor: pointer;
 }

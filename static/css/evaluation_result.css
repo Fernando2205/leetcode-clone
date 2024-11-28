@@ -9,41 +9,47 @@ body {
 
 main {
     text-align: center;
-    background-color:#212E36;
+    background-color: #212E36;
     margin: 20px;
     border-radius: 8px;
     padding: 20px;
 }
 
-.err_msj{
+.err_msj {
     margin-bottom: 20px;
 }
-.table_results{
+
+.table_results {
     width: 100%;
     margin-bottom: 15px;
-    
+
 }
-  
-.table_results tbody{
+
+.table_results tbody {
     text-align: center;
 }
 
-.table_results th{
+.table_results th {
     border: 1px solid white;
 }
+
 .table_results td {
     border: 1px solid #C8CDD0;
     border-radius: 5px;
 }
-.back-btn, .problems-btn{
+
+.back-btn,
+.problems-btn {
     background-color: #28a745;
     text-decoration: none;
     color: white;
     padding: 10px;
     border-radius: 4px;
     transition: 0.5s;
-    
+
 }
-.back-btn:hover, .problems-btn:hover{
+
+.back-btn:hover,
+.problems-btn:hover {
     background-color: #218838;
 }

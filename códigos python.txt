@@ -1,0 +1,85 @@
+Valid number
+
+    # Helper functions for character classification
+    def is_digit(c: str) -> bool:
+        return c.isdigit()
+
+    def is_sign(c: str) -> bool:
+        return c in ['+', '-']
+
+    def is_dot(c: str) -> bool:
+        return c == '.'
+
+    def is_e(c: str) -> bool:
+        return c.lower() == 'e'
+
+    # State tracking variables
+    seen_digit = False
+    seen_dot = False
+    seen_e = False
+
+    # Process each character
+    for i, c in enumerate(s):
+
+        if is_digit(c):
+            seen_digit = True
+
+        elif is_sign(c):
+
+            if i > 0 and s[i-1].lower() != 'e':
+                return False
+
+        elif is_dot(c):
+
+            if seen_dot or seen_e:
+                return False
+            seen_dot = True
+
+        elif is_e(c):
+
+            if seen_e or not seen_digit:
+                return False
+            seen_e = True
+            seen_digit = False  # Reset for digits after e
+
+        else:
+            return False
+
+    return seen_digit
+
+Binary Search
+    #
+    left = 0
+    right = len(arr) - 1
+
+    while left <= right:
+        mid = (left + right) // 2
+
+        if arr[mid] == target:
+
+            return mid
+            
+        if arr[mid] < target:
+
+            left = mid + 1
+        else:
+
+            right = mid - 1
+
+    return -1
+
+Fizzbuzz
+
+ 	return 'Fizz' * (n % 3 == 0 ) + 'Buzz' * (n % 5 == 0 ) or str(n)
+
+Factorial
+
+    #
+    if n < 0:
+      return -1
+    fact = 1
+    for num in range(2, n+1):
+      fact *= num
+    return fact
+
+

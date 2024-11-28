@@ -13,7 +13,7 @@
     <div class="login">
         <form method="POST" action="{{ url_for('login') }}">
             {{ form.hidden_tag() }}
-            <p style="font-weight: 500; font-size: 24px; color: white; margin-bottom: 40px;">Login</p>
+            <p style="font-weight: 500; font-size: 24px; color: white; margin-bottom: 10px;">Login</p>
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             <ul class="flashes">

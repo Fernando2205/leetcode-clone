@@ -1,42 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'header.html' %}
+{% block head %}
+{{ super() }}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultado de la Evaluación</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/evaluation_result.css') }}">
-</head>
 
-<body>
-    {% include 'header.html' %}
 
-    <main>
-        <h1>Resultado para el problema: {{ problem.name }}</h1>
-        {% if is_string(result) %}
-        <p class="err_msj">{{ result }}</p>
-        {% else %}
-        <table class="table_results">
-            <tr>
-                <th>Entrada</th>
-                <th>Salida Esperada</th>
-                <th>Tu Salida</th>
-                <th>¿Pasó?</th>
-            </tr>
-            {% for case in result %}
-            <tr>
-                <td>{{ case.input }}</td>
-                <td>{{ case.expected_output }}</td>
-                <td>{{ case.user_output }}</td>
-                <td>{% if case.passed %}✔️{% else %}❌{% endif %}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% endif %}
+<title>Resultado de la Evaluación</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/evaluation_result.css') }}">
+{% endblock %}
 
-        <a class="back-btn" href="{{ url_for('problem_detail', problem_id=problem.id) }}">Volver al problema</a>
-        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a lista de problemas</a>
-    </main>
-</body>
+{% block content %}
 
-</html>
+
+<main>
+    <h1>Resultado para el problema: {{ problem.name }}</h1>
+    {% if is_string(result) %}
+    <p class="err_msj">{{ result }}</p>
+    {% else %}
+    <table class="table_results">
+        <tr>
+            <th>Entrada</th>
+            <th>Salida Esperada</th>
+            <th>Tu Salida</th>
+            <th>¿Pasó?</th>
+        </tr>
+        {% for case in result %}
+        <tr>
+            <td>{{ case.input }}</td>
+            <td>{{ case.expected_output }}</td>
+            <td>{{ case.user_output }}</td>
+            <td>{% if case.passed %}✔️{% else %}❌{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <a class="back-btn" href="{{ url_for('problem_detail', problem_id=problem.id) }}">Volver al problema</a>
+    <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a lista de problemas</a>
+</main>
+{% endblock %}

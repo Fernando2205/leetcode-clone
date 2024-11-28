@@ -1,11 +1,16 @@
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprende a Programar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <script src="https://kit.fontawesome.com/e93ccfb9a4.js" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/header_dropdown.js') }}"></script>
-</head>
+{% include "base.html" %}
+
+{% block head %}
+
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+<script src="https://kit.fontawesome.com/e93ccfb9a4.js" crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/header_dropdown.js') }}"></script>
+{% endblock %}
+
+
+{% block body %}
 <header>
     <nav class="main_nav">
         <h1><a href="{{ url_for('show_problems') }}">LeetCode</a></h1>
@@ -31,3 +36,5 @@
         </div>
     </nav>
 </header>
+{% block content %}{% endblock %}
+{% endblock %}

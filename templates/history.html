@@ -1,46 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Soluciones</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
-</head>
-
-<body>
-
-    {% include 'header.html' %}
+{% extends 'header.html' %}
+{% block head %}
+{{ super() }}
 
 
-    <main>
-        <h1>Historial de Soluciones</h1>
+<title>Historial de Soluciones</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+{% endblock %}
 
-        {% if solutions %}
-        <div class="sort-controls">
-            <a href="{{ url_for('history', sort='asc') }}"
-                class="sort-btn {% if current_sort == 'asc' %}active{% endif %}">
-                <i class="fa-solid fa-arrow-up-wide-short"></i> Más antiguas
-            </a>
-            <a href="{{ url_for('history', sort='desc') }}"
-                class="sort-btn {% if current_sort == 'desc' %}active{% endif %}">
-                <i class="fa-solid fa-arrow-down-wide-short"></i> Más recientes
-            </a>
-        </div>
-        <ul>
-            {% for solution in solutions %}
-            <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
-                <li>
-                    {{ solution.id }}. Problema: {{ solution.problem.name }}
-                </li>
-            </a>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p class="no-solutions-text">No tienes soluciones enviadas</p>
-        {% endif %}
-        <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
-    </main>
-</body>
 
-</html>
+{% block content %}
+
+
+<main>
+    <h1>Historial de Soluciones</h1>
+
+    {% if solutions %}
+    <div class="sort-controls">
+        <a href="{{ url_for('history', sort='asc') }}" class="sort-btn {% if current_sort == 'asc' %}active{% endif %}">
+            <i class="fa-solid fa-arrow-up-wide-short"></i> Más antiguas
+        </a>
+        <a href="{{ url_for('history', sort='desc') }}"
+            class="sort-btn {% if current_sort == 'desc' %}active{% endif %}">
+            <i class="fa-solid fa-arrow-down-wide-short"></i> Más recientes
+        </a>
+    </div>
+    <ul>
+        {% for solution in solutions %}
+        <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
+            <li>
+                {{ solution.id }}. Problema: {{ solution.problem.name }}
+            </li>
+        </a>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="no-solutions-text">No tienes soluciones enviadas</p>
+    {% endif %}
+    <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
+</main>
+{% endblock %}

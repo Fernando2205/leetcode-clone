@@ -1,230 +1,228 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'header.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resolver {{ problem.name }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/problem_detail.css') }}">
-    <!-- CodeMirror core -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+{% block head %}
 
-    <!-- Lenguajes -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/ruby/ruby.min.js"></script>
+{{ super() }}
+<title>Resolver {{ problem.name }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/problem_detail.css') }}">
+<!-- CodeMirror core -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 
-    <!-- Autocompletado -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
+<!-- Lenguajes -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/ruby/ruby.min.js"></script>
 
-    <!-- Brackets y paréntesis -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+<!-- Autocompletado -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
 
-    <!-- CodeMirror themes -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/isotope.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-night.min.css">
-</head>
+<!-- Brackets y paréntesis -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
 
-<body>
+<!-- CodeMirror themes -->
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/isotope.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-night.min.css">
+{% endblock %}
 
 
-    {% include 'header.html' %}
-    <h1 style="text-align: center;">{{ problem.name }}</h1>
+{% block content %}
 
-    <section class="examples-div">
-        <div class="examples">
-            <h2>Ejemplos de entrada y salida:</h2>
-            <br>
-            <h3>Caso 1:</h3>
-            <p><strong>Entrada:</strong> {{ problem.examples.correct.input }}</p>
-            <p><strong>Salida Esperada:</strong> {{ problem.examples.correct.output }}</p>
 
-            <h3>Caso 2:</h3>
-            <p><strong>Entrada:</strong> {{ problem.examples.incorrect.input }}</p>
-            <p><strong>Salida Esperada:</strong> {{ problem.examples.incorrect.output }}</p>
+
+<h1 style="text-align: center; margin: 20px 0 20px 0">{{ problem.name }}</h1>
+
+<section class="examples-div">
+    <div class="examples">
+        <h2>Ejemplos de entrada y salida:</h2>
+        <br>
+        <h3>Caso 1:</h3>
+        <p><strong>Entrada:</strong> {{ problem.examples.correct.input }}</p>
+        <p><strong>Salida Esperada:</strong> {{ problem.examples.correct.output }}</p>
+
+        <h3>Caso 2:</h3>
+        <p><strong>Entrada:</strong> {{ problem.examples.incorrect.input }}</p>
+        <p><strong>Salida Esperada:</strong> {{ problem.examples.incorrect.output }}</p>
+    </div>
+    <div class="explanation">
+        <p>{{ problem.description }}</p>
+        <p>Solución recursiva permitida: {{ 'Sí' if problem.recursive else 'No' }}</p>
+        {% if problem.forbidden_words %}
+        <p>Palabras prohibidas: {{ problem.forbidden_words | join(', ') }}</p>
+        {% else %}
+        <p>No hay palabras prohibidas.</p>
+        {% endif %}
+    </div>
+
+
+    </div>
+</section>
+
+<main>
+    <form class="solution-form" id=" solution-form" method="POST" action="/submit_solution">
+        <input type="hidden" name="problem_id" value="{{ problem.id }}">
+        <div class="options">
+            <label for="language">Selecciona un lenguaje:</label>
+            <select id="language" name="language" onchange="updateEditor()">
+                <option value=""></option>
+                {% for lang in problem.languages %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="theme" style="margin-left: 20px;">Tema del editor:</label>
+            <select id="theme" name="theme" onchange="changeTheme()">
+                <option value="default">Default</option>
+                <option value="3024-night">3024 Night</option>
+                <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
+                <option value="isotope">Isotope</option>
+
+            </select>
         </div>
-        <div class="explanation">
-            <p>{{ problem.description }}</p>
-            <p>Solución recursiva permitida: {{ 'Sí' if problem.recursive else 'No' }}</p>
-            {% if problem.forbidden_words %}
-            <p>Palabras prohibidas: {{ problem.forbidden_words | join(', ') }}</p>
-            {% else %}
-            <p>No hay palabras prohibidas.</p>
-            {% endif %}
-        </div>
 
+        <br><br>
+        <label for="solution_code">Ingresa tu solución:</label><br><br>
+        <textarea id="solution_code" name="solution_code" rows="20" cols="80"></textarea><br><br>
+        <input type="submit" value="Enviar solución">
+    </form>
+</main>
 
-        </div>
-    </section>
-
-    <main>
-        <form class="solution-form" id=" solution-form" method="POST" action="/submit_solution">
-            <input type="hidden" name="problem_id" value="{{ problem.id }}">
-            <div class="options">
-                <label for="language">Selecciona un lenguaje:</label>
-                <select id="language" name="language" onchange="updateEditor()">
-                    <option value=""></option>
-                    {% for lang in problem.languages %}
-                    <option value="{{ lang }}">{{ lang }}</option>
-                    {% endfor %}
-                </select>
-
-                <label for="theme" style="margin-left: 20px;">Tema del editor:</label>
-                <select id="theme" name="theme" onchange="changeTheme()">
-                    <option value="default">Default</option>
-                    <option value="3024-night">3024 Night</option>
-                    <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
-                    <option value="isotope">Isotope</option>
-
-                </select>
-            </div>
-
-            <br><br>
-            <label for="solution_code">Ingresa tu solución:</label><br><br>
-            <textarea id="solution_code" name="solution_code" rows="20" cols="80"></textarea><br><br>
-            <input type="submit" value="Enviar solución">
-        </form>
-    </main>
-
-    <script>
-        window.onload = function () {
-            var savedTheme = localStorage.getItem('code_editor_theme');
-            if (savedTheme) {
-                document.getElementById("theme").value = savedTheme;
-            }
-        };
-        function changeTheme() {
-            var theme = document.getElementById("theme").value;
-            editor.setOption("theme", theme);
-            localStorage.setItem('code_editor_theme', theme); // Save theme preference
+<script>
+    window.onload = function () {
+        var savedTheme = localStorage.getItem('code_editor_theme');
+        if (savedTheme) {
+            document.getElementById("theme").value = savedTheme;
         }
+    };
+    function changeTheme() {
+        var theme = document.getElementById("theme").value;
+        editor.setOption("theme", theme);
+        localStorage.setItem('code_editor_theme', theme); // Save theme preference
+    }
 
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
-            lineNumbers: true,
-            matchBrackets: true,
-            autoCloseBrackets: true,
-            theme: localStorage.getItem('code_editor_theme') || "3024-night", // Load saved theme or default
-            extraKeys: {
-                "Ctrl-Space": "autocomplete",
-            },
-            hintOptions: {
-                hint: CodeMirror.hint.anyword
-            }
-        });
+    var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        theme: localStorage.getItem('code_editor_theme') || "3024-night", // Load saved theme or default
+        extraKeys: {
+            "Ctrl-Space": "autocomplete",
+        },
+        hintOptions: {
+            hint: CodeMirror.hint.anyword
+        }
+    });
 
-        var typeMapping = {
-            // Map Python data types to other languages
-            "Java": {
-                "int": "int",
-                "str": "String",
-                "float": "float",
-                "bool": "boolean",
-                "list": "List",
-                "list[int]": "int[]",
-            },
-        };
+    var typeMapping = {
+        // Map Python data types to other languages
+        "Java": {
+            "int": "int",
+            "str": "String",
+            "float": "float",
+            "bool": "boolean",
+            "list": "List",
+            "list[int]": "int[]",
+        },
+    };
 
-        var templates = {
-            "Python": function (inputParams, outputType) {
-                let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
-                return `def solution(${params}) -> ${outputType}:
+    var templates = {
+        "Python": function (inputParams, outputType) {
+            let params = inputParams.map(param => `${param.name}: ${param.type}`).join(", ");
+            return `def solution(${params}) -> ${outputType}:
     # Implementa tu solución aquí
 
     return
     `;
-            },
-            "Java": function (inputParams, outputType) {
-                let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
+        },
+        "Java": function (inputParams, outputType) {
+            let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
 
-                return `class Solution {
+            return `class Solution {
     public static ${typeMapping["Java"][outputType]} solution(${params}) {
         // Implementa tu solución aquí
         
     }
 }`;
 
-            },
+        },
 
-            "Ruby": function (inputParams, outputType) {
-                let params = inputParams.map(param => param.name).join(", ");
-                let typeComments = inputParams.map(param =>
-                    `# @param ${param.name} [${param.type}]`).join("\n");
-                return `# Tipos de parámetros:
+        "Ruby": function (inputParams, outputType) {
+            let params = inputParams.map(param => param.name).join(", ");
+            let typeComments = inputParams.map(param =>
+                `# @param ${param.name} [${param.type}]`).join("\n");
+            return `# Tipos de parámetros:
 ${typeComments}
 # @return [${outputType}]
 def solution(${params})
   # Implementa tu solución aquí
   
 end`;
-            }
-
-        };
-
-        function updateEditor() {
-            var language = document.getElementById("language").value;
-            var baseCode = '';
-            if (templates[language]) {
-                baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
-        }
-        editor.setValue(baseCode);
-
-        // Proteger áreas no editables
-        var doc = editor.getDoc();
-        var lines = baseCode.split('\n');
-
-        if (language === "Python") {
-            var defLine = doc.getLine(0);
-            doc.markText({ line: 0, ch: 0 }, { line: 0, ch: defLine.length }, {
-                readOnly: true,
-                className: 'readonly-section'
-            });
-            // Posicionar el cursor después del comentario
-            editor.setCursor(2, 4);
-        } else if (language === "Java") {
-            doc.markText({ line: 0, ch: 0 }, { line: 1, ch: 0 }, {
-                readOnly: true,
-                className: 'readonly-section'
-            });
-            doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
-                readOnly: true,
-                className: 'readonly-section'
-            });
-            // Posicionar el cursor después del comentario
-            editor.setCursor(3, 8);
-        } else if (language === "Ruby") {
-            doc.markText({ line: 0, ch: 0 }, { line: 0, ch: lines[0].length }, {
-                readOnly: true,
-                className: 'readonly-section'
-            });
-            doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
-                readOnly: true,
-                className: 'readonly-section'
-            });
-            // Posicionar el cursor después del comentario
-            editor.setCursor(2, 2);
-        }
         }
 
-        editor.setOption("mode", language === "Python" ? "python" :
-            language === "Java" ? "text/x-java" : "text/x-ruby");
+    };
 
-        // Agregar estilos para las secciones de solo lectura
-        var style = document.createElement('style');
-        style.textContent = `
+    function updateEditor() {
+        var language = document.getElementById("language").value;
+        var baseCode = '';
+        if (templates[language]) {
+            baseCode = templates[language]({{ problem.input_params | tojson }}, '{{ problem.output_type }}');
+    }
+    editor.setValue(baseCode);
+
+    // Proteger áreas no editables
+    var doc = editor.getDoc();
+    var lines = baseCode.split('\n');
+
+    if (language === "Python") {
+        var defLine = doc.getLine(0);
+        doc.markText({ line: 0, ch: 0 }, { line: 0, ch: defLine.length }, {
+            readOnly: true,
+            className: 'readonly-section'
+        });
+        // Posicionar el cursor después del comentario
+        editor.setCursor(2, 4);
+    } else if (language === "Java") {
+        doc.markText({ line: 0, ch: 0 }, { line: 1, ch: 0 }, {
+            readOnly: true,
+            className: 'readonly-section'
+        });
+        doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
+            readOnly: true,
+            className: 'readonly-section'
+        });
+        // Posicionar el cursor después del comentario
+        editor.setCursor(3, 8);
+    } else if (language === "Ruby") {
+        doc.markText({ line: 0, ch: 0 }, { line: 0, ch: lines[0].length }, {
+            readOnly: true,
+            className: 'readonly-section'
+        });
+        doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
+            readOnly: true,
+            className: 'readonly-section'
+        });
+        // Posicionar el cursor después del comentario
+        editor.setCursor(2, 2);
+    }
+        }
+
+    editor.setOption("mode", language === "Python" ? "python" :
+        language === "Java" ? "text/x-java" : "text/x-ruby");
+
+    // Agregar estilos para las secciones de solo lectura
+    var style = document.createElement('style');
+    style.textContent = `
 .readonly-section {
     background-color: rgba(0,0,0,0.1);
     cursor: not-allowed;
 }`;
-        document.head.appendChild(style);
-    </script>
+    document.head.appendChild(style);
+</script>
 
-</body>
-
-</html>
+{% endblock %}

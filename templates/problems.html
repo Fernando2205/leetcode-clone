@@ -1,35 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'header.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprende a Programar</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/problems.css') }}">
-</head>
+{% block head %}
 
-<body>
-    {% include 'header.html' %}
+{{ super() }}
 
-    <main>
-        <h2 class="title">Mejora tus habilidades de programación</h2>
-        <p class="subtitle">Selecciona un problema para resolver y mejorar tus habilidades de programación.</p>
-        <section class="problem-selection">
 
-            {% for problem in problems_arr %}
-            <div class="problem-container">
+<title>Aprende a Programar</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/problems.css') }}">
+{% endblock %}
 
-                <h3>Problema: {{problem.name}}</h3>
-                <p>{{problem.description}}</p>
+{% block content %}
 
-                <button onclick="window.location.href='/problem/{{problem.id}}'">Resolver</button>
 
-            </div>
-            {% endfor %}
 
-        </section>
-    </main>
+<main>
+    <h2 class="title">Mejora tus habilidades de programación</h2>
+    <p class="subtitle">Selecciona un problema para resolver y mejorar tus habilidades de programación.</p>
+    <section class="problem-selection">
 
-</body>
+        {% for problem in problems_arr %}
+        <div class="problem-container">
 
-</html>
+            <h3>Problema: {{problem.name}}</h3>
+            <p>{{problem.description}}</p>
+
+            <button onclick="window.location.href='/problem/{{problem.id}}'">Resolver</button>
+
+        </div>
+        {% endfor %}
+
+    </section>
+</main>
+
+{% endblock %}

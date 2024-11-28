@@ -66,13 +66,25 @@
     <main>
         <form class="solution-form" id=" solution-form" method="POST" action="/submit_solution">
             <input type="hidden" name="problem_id" value="{{ problem.id }}">
-            <label for="language">Selecciona un lenguaje:</label>
-            <select id="language" name="language" onchange="updateEditor()">
-                <option value=""></option>
-                {% for lang in problem.languages %}
-                <option value="{{ lang }}">{{ lang }}</option>
-                {% endfor %}
-            </select>
+            <div class="options">
+                <label for="language">Selecciona un lenguaje:</label>
+                <select id="language" name="language" onchange="updateEditor()">
+                    <option value=""></option>
+                    {% for lang in problem.languages %}
+                    <option value="{{ lang }}">{{ lang }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="theme" style="margin-left: 20px;">Tema del editor:</label>
+                <select id="theme" name="theme" onchange="changeTheme()">
+                    <option value="default">Default</option>
+                    <option value="3024-night">3024 Night</option>
+                    <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
+                    <option value="isotope">Isotope</option>
+
+                </select>
+            </div>
+
             <br><br>
             <label for="solution_code">Ingresa tu solución:</label><br><br>
             <textarea id="solution_code" name="solution_code" rows="20" cols="80"></textarea><br><br>
@@ -81,11 +93,24 @@
     </main>
 
     <script>
+        window.onload = function () {
+            var savedTheme = localStorage.getItem('code_editor_theme');
+            if (savedTheme) {
+                document.getElementById("theme").value = savedTheme;
+            }
+        };
+        function changeTheme() {
+            var theme = document.getElementById("theme").value;
+            editor.setOption("theme", theme);
+            localStorage.setItem('code_editor_theme', theme); // Save theme preference
+        }
+
+
         var editor = CodeMirror.fromTextArea(document.getElementById("solution_code"), {
             lineNumbers: true,
             matchBrackets: true,
             autoCloseBrackets: true,
-            theme: "3024-night",
+            theme: localStorage.getItem('code_editor_theme') || "3024-night", // Load saved theme or default
             extraKeys: {
                 "Ctrl-Space": "autocomplete",
             },
@@ -117,7 +142,7 @@
             },
             "Java": function (inputParams, outputType) {
                 let params = inputParams.map(param => `${typeMapping["Java"][param.type]} ${param.name}`).join(", ");
-                // Usando 4 espacios para la indentación estándar de Java
+
                 return `class Solution {
     public static ${typeMapping["Java"][outputType]} solution(${params}) {
         // Implementa tu solución aquí

@@ -1,44 +1,39 @@
 @import url(../css/general-styles.css);
 
 
-h1{
+h1 {
   margin: 0;
 }
+
 body {
   background-color: #192229;
   color: #C8CDD0;
 }
 
-form{
+form {
   flex-direction: column;
 }
 
 main {
-    margin: 20px ;
-    padding: 20px;
-    background-color: #212E36;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #212E36;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-.solution-form label{
+.solution-form label {
   font-size: 1.1rem;
   font-weight: bold;
 }
 
-.solution-form select,
-textarea {
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1em;
-}
+
 form input[type="submit"] {
   background-color: #28a745;
   font-size: 1em;
   color: white;
   border: none;
-  padding: 10px 20px ;
+  padding: 10px 20px;
   cursor: pointer;
   border-radius: 4px;
   transition: 0.5s;
@@ -58,12 +53,13 @@ form input[type="submit"]:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.examples-div h2, .examples-div h3 {
+.examples-div h2,
+.examples-div h3 {
   margin-top: 0;
 }
 
 .examples-div p {
-  
+
   padding: 10px;
   border-radius: 4px;
   /* font-family: 'Courier New', Courier, monospace; */
@@ -78,12 +74,49 @@ form input[type="submit"]:hover {
   border-left: 5px solid #dc3545;
 }
 
-.explanation{
+.explanation {
   width: 60%;
   font-size: 1.2rem;
   font-weight: 500;
 }
-.examples{
+
+.examples {
   font-size: 1.2rem;
   width: 40%;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.options select {
+  font-size: 18px;
+  padding: 5px;
+}
+
+#language {
+  background-color: #2A3A47;
+  color: #C8CDD0;
+  border: 1px solid #364B5D;
+  margin-left: 5px;
+  border-radius: 4px;
+
+}
+
+#language:hover {
+  border-color: #4A6B8C;
+}
+
+#theme {
+  margin-left: 5px;
+  border-radius: 4px;
+  background-color: #2A3A47;
+  color: #C8CDD0;
+  border: 1px solid #364B5D;
+}
+
+#theme:hover {
+  border-color: #4A6B8C;
 }

@@ -31,6 +31,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/isotope.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-night.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/base16-dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/duotone-dark.min.css">
 {% endblock %}
 
 
@@ -85,6 +86,7 @@
                 <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
                 <option value="isotope">Isotope</option>
                 <option value="base16-dark">Base16 Dark</option>
+                <option value="duotone-dark">Duotone Dark</option>
 
             </select>
         </div>
@@ -251,7 +253,6 @@ end`;
     var style = document.createElement('style');
     style.textContent = `
 .readonly-section {
-    background-color: rgba(0,0,0,0.1);
     cursor: not-allowed;
 }`;
     document.head.appendChild(style);

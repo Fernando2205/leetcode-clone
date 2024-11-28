@@ -23,6 +23,22 @@ Binary Search
   
   -1
 
+Factorial
+
+  # Caso especial para números negativos
+  return -1 if n < 0
+  
+  # Casos base
+  return 1 if n == 0 || n == 1
+  
+  # Cálculo iterativo del factorial
+  result = 1
+  (2..n).each do |i|
+    result *= i
+  end
+  
+  result
+  
 Palindromo
   s == s.reverse
 

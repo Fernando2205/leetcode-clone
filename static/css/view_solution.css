@@ -22,9 +22,12 @@ main {
     border: 1px solid #C8CDD0;
     padding: 10px;
     border-radius: 5px;
-    white-space: pre-wrap; /* Mantener el formato del código */
-    overflow: auto; /* Agregar desplazamiento si es necesario */
-    max-height: 300px; /* Limitar la altura del cuadro de código */
+    white-space: pre-wrap;
+    /* Mantener el formato del código */
+    overflow: auto;
+    /* Agregar desplazamiento si es necesario */
+    max-height: 300px;
+    /* Limitar la altura del cuadro de código */
 }
 
 .history-btn {
@@ -41,29 +44,51 @@ main {
 }
 
 
-.table_results{
+.table_results {
     width: 100%;
     margin-bottom: 15px;
-    
+
 }
-  
-.table_results tbody{
+
+.table_results tbody {
     text-align: center;
 }
 
-.table_results th{
+.table_results th {
     border: 1px solid white;
 }
+
 .table_results td {
     border: 1px solid #C8CDD0;
     border-radius: 5px;
 }
 
-.back-btn{
+.back-btn {
     background-color: #28a745;
     text-decoration: none;
     color: white;
     padding: 10px;
     border-radius: 4px;
     transition: 0.5s;
+}
+
+/* Add these styles to view_solution.css */
+.solution-code::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    /* For horizontal scroll */
+}
+
+.solution-code::-webkit-scrollbar-track {
+    background: #1C252D;
+    border-radius: 4px;
+}
+
+.solution-code::-webkit-scrollbar-thumb {
+    background: #2A3A47;
+    border-radius: 4px;
+}
+
+.solution-code::-webkit-scrollbar-thumb:hover {
+    background: #364B5D;
 }

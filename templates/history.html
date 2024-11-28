@@ -10,7 +10,6 @@
 
 {% block content %}
 
-
 <main>
     <h1>Historial de Soluciones</h1>
 
@@ -24,15 +23,17 @@
             <i class="fa-solid fa-arrow-down-wide-short"></i> Más recientes
         </a>
     </div>
-    <ul>
-        {% for solution in solutions %}
-        <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
-            <li>
-                {{ solution.id }}. Problema: {{ solution.problem.name }}
-            </li>
-        </a>
-        {% endfor %}
-    </ul>
+    <div class="solutions-container">
+        <ul>
+            {% for solution in solutions %}
+            <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
+                <li>
+                    {{ solution.id }}. Problema: {{ solution.problem.name }}
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </div>
     {% else %}
     <p class="no-solutions-text">No tienes soluciones enviadas</p>
     {% endif %}

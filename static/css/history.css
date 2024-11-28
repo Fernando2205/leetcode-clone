@@ -14,7 +14,48 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
+    position: relative;
 }
+
+
+/* Add scroll container for solutions */
+.solutions-container {
+    max-height: 60vh;
+    /* Viewport height percentage */
+    overflow-y: auto;
+    margin: 20px 0;
+    padding: 0 10px;
+}
+
+/* Scrollbar styling */
+/* .solutions-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.solutions-container::-webkit-scrollbar-track {
+    background: #1C252D;
+    border-radius: 4px;
+}
+
+.solutions-container::-webkit-scrollbar-thumb {
+    background: #2A3A47;
+    border-radius: 4px;
+}
+
+.solutions-container::-webkit-scrollbar-thumb:hover {
+    background: #364B5D;
+} */
+
+/* Keep sort controls and button outside scroll */
+.sort-controls {
+    position: sticky;
+    top: 0;
+    background-color: #212E36;
+    padding: 10px 0;
+    z-index: 1;
+}
+
+
 
 h1 {
     color: #C8CDD0;
@@ -63,13 +104,6 @@ a {
     margin: 10px 0 10px 0;
 }
 
-/* history.css - Add styles for sort buttons */
-.sort-controls {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
 
 .sort-btn {
     padding: 8px 15px;

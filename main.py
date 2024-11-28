@@ -161,17 +161,26 @@ def show_register():
     return render_template('register.html')
 
 
+# main.py - Update history route
 @app.route('/history')
 @login_required
 def history():
     """
     Displays the history of solutions submitted by the user.
     """
-    solutions = Solution.query.options(joinedload(
-        Solution.problem)).filter_by(user_id=current_user.id).all()
+    sort_order = request.args.get('sort', 'desc')  # Default to descending
+
+    query = Solution.query.options(joinedload(
+        Solution.problem)).filter_by(user_id=current_user.id)
+
+    if sort_order == 'asc':
+        solutions = query.order_by(Solution.timestamp.asc()).all()
+    else:
+        solutions = query.order_by(Solution.timestamp.desc()).all()
+
     for solution in solutions:
         solution.result = json.loads(solution.result)
-    return render_template('history.html', solutions=solutions)
+    return render_template('history.html', solutions=solutions, current_sort=sort_order)
 
 
 @app.route('/solution/<int:solution_id>')
@@ -249,12 +258,19 @@ def evaluate_ruby_code(solution_code, test_cases):
                 # Get output and convert to appropriate type
                 user_output = process.stdout.strip()
                 converted_output = convert_output(user_output, expected_output)
+                passed = False
+
+                if isinstance(expected_output, list):
+                    passed = sorted(converted_output) == sorted(
+                        expected_output)
+                else:
+                    passed = converted_output == expected_output
 
                 results.append({
                     'input': test_case['input'],
                     'expected_output': expected_output,
                     'user_output': converted_output,
-                    'passed': converted_output == expected_output
+                    'passed': passed
                 })
 
             except Exception as e:
@@ -268,38 +284,71 @@ def evaluate_ruby_code(solution_code, test_cases):
     return results
 
 
-def wrap_ruby_code(solution_code):
-    # Use Unix-style line endings
+def wrap_ruby_code(solution_code: str) -> str:
     normalized_code = solution_code.replace('\r\n', '\n')
 
     return f"""
 {normalized_code}
 
-# Convert command line arguments
-if ARGV[0].start_with?('[')
-    # Handle array argument
-    arr = eval(ARGV[0].gsub('\\\\', ''))
-    target = ARGV[1].to_i
-    result = solution(arr, target)
-else
-    # Handle single argument
-    result = solution(ARGV[0].to_i)
+# Convert command line arguments to appropriate types
+args = ARGV.map do |arg|
+    case arg
+    when /^\\[.*\\]$/  # Array
+        begin
+            eval(arg)
+        rescue
+            arg
+        end
+    when /^-?\\d+$/    # Integer (including negative)
+        arg.to_i
+    when /^-?\\d*\\.\\d+$/  # Float (including negative)
+        arg.to_f
+    when 'true', 'false'  # Boolean
+        arg == 'true'
+    else              # String or other
+        arg
+    end
+end
+
+# Call solution with converted arguments
+result = solution(*args)
+
+# Handle array output
+if result.is_a?(Array)
+    result = result.sort if result.all? do |item|
+        item.is_a?(Integer) || item.is_a?(Float)
+    end
 end
 
 puts result.to_s
-""".replace('\r\n', '\n')  # Ensure Unix line endings
+"""
 
 
 def convert_output(user_output: str, expected_type: Any) -> Any:
     """
     Converts the Ruby output string to the expected Python type
     """
-    if isinstance(expected_type, bool):
-        return user_output.lower() == 'true'
-    elif isinstance(expected_type, int):
-        return int(user_output)
-    elif isinstance(expected_type, float):
-        return float(user_output)
+    try:
+        if isinstance(expected_type, list):
+            if user_output.startswith('[') and user_output.endswith(']'):
+                items = user_output[1:-1].split(',')
+                if items and items[0].strip():
+                    if isinstance(expected_type[0], int):
+                        return [int(x.strip()) for x in items]
+                    elif isinstance(expected_type[0], float):
+                        return [float(x.strip()) for x in items]
+                    else:
+                        return [x.strip() for x in items]
+                return []
+        elif isinstance(expected_type, bool):
+            return user_output.lower() == 'true'
+        elif isinstance(expected_type, int):
+            return int(user_output)
+        elif isinstance(expected_type, float):
+            return float(user_output)
+    except (ValueError, IndexError) as e:
+        return user_output
+
     return user_output
 
 

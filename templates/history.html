@@ -15,9 +15,18 @@
 
     <main>
         <h1>Historial de Soluciones</h1>
+        <div class="sort-controls">
+            <a href="{{ url_for('history', sort='asc') }}"
+                class="sort-btn {% if current_sort == 'asc' %}active{% endif %}">
+                <i class="fa-solid fa-arrow-up-wide-short"></i> Más antiguas
+            </a>
+            <a href="{{ url_for('history', sort='desc') }}"
+                class="sort-btn {% if current_sort == 'desc' %}active{% endif %}">
+                <i class="fa-solid fa-arrow-down-wide-short"></i> Más recientes
+            </a>
+        </div>
         {% if solutions %}
         <ul>
-
             {% for solution in solutions %}
             <a href="{{ url_for('view_solution', solution_id=solution.id) }}">
                 <li>
@@ -27,9 +36,8 @@
             {% endfor %}
         </ul>
         {% else %}
-        <p class=" no-solutions-text">No tienes soluciones enviadas</p>
+        <p class="no-solutions-text">No tienes soluciones enviadas</p>
         {% endif %}
-
         <a class="problems-btn" href="{{ url_for('show_problems') }}">Volver a problemas</a>
     </main>
 </body>

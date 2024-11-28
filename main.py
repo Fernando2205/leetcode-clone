@@ -204,7 +204,7 @@ def view_solution(solution_id):
     return render_template('view_solution.html', solution=solution,)
 
 
-def evaluate_python_code(solution_code, test_cases):
+def evaluate_python_code(solution_code: str, test_cases: list) -> list:
     """
     Evaluates the solution code in Python using test cases.
     """
@@ -234,7 +234,7 @@ def evaluate_python_code(solution_code, test_cases):
     return results
 
 
-def evaluate_ruby_code(solution_code, test_cases):
+def evaluate_ruby_code(solution_code: str, test_cases: list) -> list:
     """
     Evaluates Ruby code with test cases
     """
@@ -504,14 +504,14 @@ def validate_forbidden_words(solution_code: str, forbidden_words: str) -> bool:
     return True, ""
 
 
-def check_recursion(solution_code, function_name):
+def check_recursion(solution_code: str, function_name: str) -> bool:
     """
     Checks if the solution code uses recursion.
     """
     return solution_code.count(f"{function_name}(") >= 2
 
 
-def is_string(value):
+def is_string(value: object) -> bool:
     """
     Checks if the value is a string.
     """

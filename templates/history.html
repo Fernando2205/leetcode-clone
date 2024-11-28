@@ -15,6 +15,8 @@
 
     <main>
         <h1>Historial de Soluciones</h1>
+
+        {% if solutions %}
         <div class="sort-controls">
             <a href="{{ url_for('history', sort='asc') }}"
                 class="sort-btn {% if current_sort == 'asc' %}active{% endif %}">
@@ -25,7 +27,6 @@
                 <i class="fa-solid fa-arrow-down-wide-short"></i> Más recientes
             </a>
         </div>
-        {% if solutions %}
         <ul>
             {% for solution in solutions %}
             <a href="{{ url_for('view_solution', solution_id=solution.id) }}">

@@ -25,7 +25,7 @@ main {
     width: 100%;
 }
 
-.login {
+.register {
     background-color: #212E36;
     width: 90vw;
     max-width: 400px;
@@ -39,7 +39,7 @@ main {
     margin: auto;
 }
 
-.login form {
+.register form {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -62,7 +62,7 @@ label {
     color: #000;
 }
 
-.login-btn {
+.signup-btn {
     border: none;
     font-weight: 500;
     border-radius: 6px;
@@ -76,12 +76,12 @@ label {
     transition: background-color 0.3s ease;
 }
 
-.login-btn:hover {
+.signup-btn:hover {
     cursor: pointer;
     background-color: #218838;
 }
 
-.createAccount {
+.login-url {
     margin-top: 25px;
     color: #ffffff;
     font-weight: 600;
@@ -90,14 +90,14 @@ label {
     font-size: 14px;
 }
 
-.createAccount a {
+.login-url a {
     color: #26cc4d;
     text-decoration: none;
     margin-left: 5px;
     transition: color 0.3s ease;
 }
 
-.createAccount a:hover {
+.login-url a:hover {
     color: #20a43d;
 }
 
@@ -109,7 +109,7 @@ label {
     color: red;
 }
 
-.login form input {
+.register form input {
     width: 100%;
     border-radius: 4px;
     border: 1px solid #192229;

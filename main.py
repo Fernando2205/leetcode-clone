@@ -156,11 +156,6 @@ def submit_solution():
     return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
 
-@app.route('/register', methods=['GET'])
-def show_register():
-    return render_template('register.html')
-
-
 # main.py - Update history route
 @app.route('/history')
 @login_required

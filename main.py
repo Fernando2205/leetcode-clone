@@ -269,14 +269,25 @@ def evaluate_ruby_code(solution_code, test_cases):
 
 
 def wrap_ruby_code(solution_code):
-    return f"""
-{solution_code}
+    # Use Unix-style line endings
+    normalized_code = solution_code.replace('\r\n', '\n')
 
-# Ensure first argument is converted to integer
-n = ARGV[0].to_i
-result = solution(n)
+    return f"""
+{normalized_code}
+
+# Convert command line arguments
+if ARGV[0].start_with?('[')
+    # Handle array argument
+    arr = eval(ARGV[0].gsub('\\\\', ''))
+    target = ARGV[1].to_i
+    result = solution(arr, target)
+else
+    # Handle single argument
+    result = solution(ARGV[0].to_i)
+end
+
 puts result.to_s
-"""
+""".replace('\r\n', '\n')  # Ensure Unix line endings
 
 
 def convert_output(user_output: str, expected_type: Any) -> Any:

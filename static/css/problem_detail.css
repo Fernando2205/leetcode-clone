@@ -48,7 +48,7 @@ form input[type="submit"]:hover {
   display: flex;
   background-color: #212E36;
   padding: 35px;
-  margin: 20px;
+  margin: 0 20px 0 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }

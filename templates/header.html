@@ -13,7 +13,9 @@
 {% block body %}
 <header>
     <nav class="main_nav">
-        <h1><a href="{{ url_for('show_problems') }}">LeetCode</a></h1>
+        <a href="{{ url_for('show_problems') }}">
+            <h1 style="font-size: 28px;">LeetCode</h1>
+        </a>
         <label id="togglerLable" for="toggleChecker">
             <div class="checkboxtoggler">
                 <div class="line-1"></div>
@@ -22,12 +24,13 @@
             </div>
         </label>
         <div class="profile">
-            <i class="fa-solid fa-magnifying-glass"></i>
+
             <a href="{{ url_for('history') }}" class="history-link"><i class="fa-regular fa-clock"></i></a>
             <img src="https://i0.wp.com/www.stignatius.co.uk/wp-content/uploads/2020/10/default-user-icon.jpg?fit=415%2C415&ssl=1"
                 alt="Profile Picture">
-            <p>{{ current_user.username }}</p>
+            <!-- <p>{{ current_user.username }}</p> -->
             <div class="dropdown-container">
+                <p>{{ current_user.username }}</p>
                 <i class="fa-solid fa-caret-down" id="dropdown-toggle"></i>
                 <div class="dropdown-menu" id="dropdown-menu">
                     <a href="{{ url_for('logout') }}">Cerrar Sesión</a>

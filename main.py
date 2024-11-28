@@ -34,11 +34,17 @@ login_manager.login_view = "login"
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Loads the user with the specified ID.
+    """
     return User.query.get(int(user_id))
 
 
 @app.before_request
 def create_tables() -> None:
+    """
+    Creates the database tables if they do not exist.
+    """
     if not hasattr(app, 'tables_created'):
         db.create_all()
         app.tables_created = True
@@ -46,6 +52,9 @@ def create_tables() -> None:
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
+    """
+    Logs in the user.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('show_problems'))
     form = LoginForm()
@@ -64,6 +73,9 @@ def login():
 
 @app.route('/signup/', methods=["GET", "POST"])
 def signup():
+    """
+    Registers a new user.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('show_problems'))
     form = SignupForm()
@@ -82,6 +94,9 @@ def signup():
 
 @app.route('/logout')
 def logout():
+    """
+    Logs out the current user.
+    """
     logout_user()
     return redirect(url_for('login'))
 
@@ -130,7 +145,7 @@ def submit_solution():
         if solution_code and re.search(r'\b' + re.escape(forbidden_word) + r'\b', solution_code):
             return render_template('evaluation_result.html', result=f"Error: Uso de palabra prohibida '{forbidden_word}'", problem=problem, is_string=is_string)
 
-    if problem.recursive == False and check_recursion(solution_code, 'solution'):
+    if problem.recursive is False and check_recursion(solution_code, 'solution'):
         return render_template('evaluation_result.html', result="Error: No se admite solución recursiva", problem=problem, is_string=is_string)
 
     test_cases = json.loads(problem.test_cases)
@@ -156,7 +171,6 @@ def submit_solution():
     return render_template('evaluation_result.html', result=result, problem=problem, is_string=is_string)
 
 
-# main.py - Update history route
 @app.route('/history')
 @login_required
 def history():
@@ -360,6 +374,9 @@ def evaluate_java_code(solution_code: str, test_cases: list, input_params: list)
 
 
 def wrap_ruby_code(solution_code: str) -> str:
+    """
+    Wraps the Ruby solution code in a script that handles command line arguments.
+    """
     normalized_code = solution_code.replace('\r\n', '\n')
 
     return f"""
@@ -410,10 +427,10 @@ def convert_output(user_output: str, expected_type: Any) -> Any:
                 if items and items[0].strip():
                     if isinstance(expected_type[0], int):
                         return [int(x.strip()) for x in items]
-                    elif isinstance(expected_type[0], float):
+                    if isinstance(expected_type[0], float):
                         return [float(x.strip()) for x in items]
-                    else:
-                        return [x.strip() for x in items]
+
+                    return [x.strip() for x in items]
                 return []
         elif isinstance(expected_type, bool):
             return user_output.lower() == 'true'
@@ -421,13 +438,16 @@ def convert_output(user_output: str, expected_type: Any) -> Any:
             return int(user_output)
         elif isinstance(expected_type, float):
             return float(user_output)
-    except (ValueError, IndexError) as e:
+    except (ValueError, IndexError):
         return user_output
 
     return user_output
 
 
 def wrap_java_code(input_params: list) -> str:
+    """
+    Wraps the Java solution code in a Main class with a main method.
+    """
     param_conversions = []
     solution_params = []
 
@@ -474,7 +494,7 @@ public class Main {{
 }}"""
 
 
-def validate_forbidden_words(solution_code, forbidden_words):
+def validate_forbidden_words(solution_code: str, forbidden_words: str) -> bool:
     """
     Validates if the solution code contains forbidden words.
     """

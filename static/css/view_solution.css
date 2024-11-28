@@ -63,7 +63,16 @@ main {
     border-radius: 5px;
 }
 
-.back-btn {
+.btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+}
+
+.back-btn,
+.problems-btn {
+    width: 220px;
     background-color: #28a745;
     text-decoration: none;
     color: white;
@@ -71,6 +80,12 @@ main {
     border-radius: 4px;
     transition: 0.5s;
 }
+
+.back-btn:hover,
+.problems-btn:hover {
+    background-color: #218838;
+}
+
 
 /* Add these styles to view_solution.css */
 .solution-code::-webkit-scrollbar {

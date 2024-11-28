@@ -9,25 +9,28 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
 
-<!-- Lenguajes -->
+<!-- Languages -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/clike/clike.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/ruby/ruby.min.js"></script>
 
-<!-- Autocompletado -->
+<!-- Autocomplete -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/hint/anyword-hint.min.js"></script>
 
-<!-- Brackets y paréntesis -->
+<!-- Brackets and parentheses -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/matchbrackets.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/addon/edit/closebrackets.min.js"></script>
+
+
 
 <!-- CodeMirror themes -->
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/tomorrow-night-bright.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/isotope.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/3024-night.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/base16-dark.min.css">
 {% endblock %}
 
 
@@ -81,6 +84,7 @@
                 <option value="3024-night">3024 Night</option>
                 <option value="tomorrow-night-bright">Tomorrow Night Bright</option>
                 <option value="isotope">Isotope</option>
+                <option value="base16-dark">Base16 Dark</option>
 
             </select>
         </div>
@@ -175,7 +179,7 @@ end`;
     }
     editor.setValue(baseCode);
 
-    // Proteger áreas no editables
+    // Protect non-editable areas
     var doc = editor.getDoc();
     var lines = baseCode.split('\n');
 
@@ -188,34 +192,62 @@ end`;
         // Posicionar el cursor después del comentario
         editor.setCursor(2, 4);
     } else if (language === "Java") {
-        doc.markText({ line: 0, ch: 0 }, { line: 1, ch: 0 }, {
-            readOnly: true,
-            className: 'readonly-section'
-        });
-        doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
-            readOnly: true,
-            className: 'readonly-section'
-        });
-        // Posicionar el cursor después del comentario
-        editor.setCursor(3, 8);
+        // Protect class definition
+        doc.markText(
+            { line: 0, ch: 0 },
+            { line: 1, ch: 0 },
+            { readOnly: true, className: 'readonly-section' }
+        );
+        // Find and protect method signature line
+        var methodLine = lines.findIndex(line =>
+            line.trim().startsWith('public static')
+        );
+        doc.markText(
+            { line: methodLine, ch: 0 },
+            { line: methodLine + 1, ch: 0 },
+            { readOnly: true, className: 'readonly-section' }
+        );
+        // Protect closing braces
+        doc.markText(
+            { line: lines.length - 2, ch: 0 },
+            { line: lines.length, ch: 0 },
+            { readOnly: true, className: 'readonly-section' }
+        );
+        // Position cursor after method signature
+        editor.setCursor(methodLine + 1, 8);
     } else if (language === "Ruby") {
-        doc.markText({ line: 0, ch: 0 }, { line: 0, ch: lines[0].length }, {
-            readOnly: true,
-            className: 'readonly-section'
-        });
-        doc.markText({ line: lines.length - 1, ch: 0 }, { line: lines.length, ch: 0 }, {
-            readOnly: true,
-            className: 'readonly-section'
-        });
-        // Posicionar el cursor después del comentario
-        editor.setCursor(2, 2);
+        var defLine = lines.findIndex(line => line.trim().startsWith('def solution'));
+        // Protect type documentation comments
+        for (let i = 0; i < defLine; i++) {
+            doc.markText(
+                { line: i, ch: 0 },
+                { line: i, ch: lines[i].length },
+                { readOnly: true, className: 'readonly-section' }
+            );
+        }
+        // Protect function definition
+        doc.markText(
+            { line: defLine, ch: 0 },
+            { line: defLine, ch: lines[defLine].length },
+            { readOnly: true, className: 'readonly-section' }
+        );
+        // Protect end keyword
+        doc.markText(
+            { line: lines.length - 1, ch: 0 },
+            { line: lines.length, ch: 0 },
+            { readOnly: true, className: 'readonly-section' }
+        );
+        // Position cursor after comment
+        editor.setCursor(defLine + 2, 2);
     }
+    editor.setOption("mode", language == "Python" ? "python" :
+        language == "Java" ? "text/x-java" :
+            language == "Ruby" ? "ruby" : null);
         }
 
-    editor.setOption("mode", language === "Python" ? "python" :
-        language === "Java" ? "text/x-java" : "text/x-ruby");
 
-    // Agregar estilos para las secciones de solo lectura
+
+    // Add styles for read-only sections
     var style = document.createElement('style');
     style.textContent = `
 .readonly-section {

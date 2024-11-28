@@ -41,7 +41,7 @@ def loadUser(user_id):
 def create_tables() -> None:
     if not hasattr(app, 'tables_created'):
         db.create_all()
-        app.tables_crrated = True
+        app.tables_created = True
 
 
 @app.route('/', methods=['GET', 'POST'])

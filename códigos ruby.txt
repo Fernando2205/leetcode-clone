@@ -1,5 +1,6 @@
 Fizzbuzz
 
+  #
   respuestas = [n.to_s, "Fizz", "Buzz", "FizzBuzz"]
   divisible_por_3 = n % 3 == 0 ? 1 : 0
   divisible_por_5 = n % 5 == 0 ? 1 : 0
@@ -7,6 +8,8 @@ Fizzbuzz
   respuestas[indice]
 
 Binary Search
+
+  #
   left = 0
   right = arr.length - 1
   
@@ -40,9 +43,11 @@ Factorial
   result
   
 Palindromo
+  #
   s == s.reverse
 
 Valid number
+
   # Convert to string if numeric
   s = s.to_s if s.is_a?(Numeric)
   
@@ -59,6 +64,7 @@ Valid number
 
 Sum of two numbers
 
+  #
   hash = {}
   
   nums.each_with_index do |num, i|
@@ -71,6 +77,7 @@ Sum of two numbers
 
 Roman to Integer
 
+  #
   roman = {
     'I' => 1, 
     'V' => 5, 
@@ -118,6 +125,7 @@ Integer to roman
 
 Valid parentheses
 
+  #
   stack = []
   pairs = {')' => '(', ']' => '[', '}' => '{'}
   

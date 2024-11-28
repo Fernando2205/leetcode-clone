@@ -1,4 +1,5 @@
 FizzBuzz 
+        //
         String[] answers = {Integer.toString(n), "Fizz", "Buzz", "FizzBuzz"};
         int index = ((n % 3 == 0) ? 1 : 0) + ((n % 5 == 0) ? 2 : 0);
         return answers[index];
@@ -29,6 +30,7 @@ Binary Search
 
 Sum of two numbers
 
+        //
         java.util.HashMap<Integer, Integer> map = new java.util.HashMap<>();
         
         for (int i = 0; i < nums.length; i++) {
@@ -44,6 +46,8 @@ Sum of two numbers
 
 
 Parentesis válidos
+
+        //
         java.util.Stack<Character> stack = new java.util.Stack<>();
         
         for (char c : s.toCharArray()) {
@@ -61,3 +65,115 @@ Parentesis válidos
         }
         
         return stack.isEmpty();
+
+Palindrome
+
+        //
+        int left = 0;
+        int right = s.length() - 1;
+        
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        
+        return true;
+
+Integer to roman
+
+        //
+        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] romans = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        
+        StringBuilder result = new StringBuilder();
+        
+        for (int i = 0; i < values.length; i++) {
+            while (num >= values[i]) {
+                result.append(romans[i]);
+                num -= values[i];
+            }
+        }
+        
+        return result.toString();
+
+Roman to Integer
+
+        //
+        java.util.Map<Character, Integer> roman = new java.util.HashMap<>();
+        roman.put('I', 1);
+        roman.put('V', 5);
+        roman.put('X', 10);
+        roman.put('L', 50);
+        roman.put('C', 100);
+        roman.put('D', 500);
+        roman.put('M', 1000);
+        
+        int result = 0;
+        int prevValue = 0;
+        
+        for (int i = s.length() - 1; i >= 0; i--) {
+            int currValue = roman.get(s.charAt(i));
+            if (currValue >= prevValue) {
+                result += currValue;
+            } else {
+                result -= currValue;
+            }
+            prevValue = currValue;
+        }
+        
+        return result;
+
+Valid number
+
+      	//
+        if (s == null) return false;
+        s = s.trim();
+        try {
+            Double.parseDouble(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+Money to words
+
+        //
+        String[] UNDER_20 = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+            "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+        String[] TENS = {"", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
+        
+        if (amount == 0) return "zero dollars";
+        
+        int dollars = (int) amount;
+        int cents = (int) Math.round((amount - dollars) * 100);
+        
+        StringBuilder result = new StringBuilder();
+        
+        // Helper function as local class
+        class NumberConverter {
+            String convert(int n) {
+                if (n < 20) return UNDER_20[n];
+                if (n < 100) return TENS[n/10] + (n%10 != 0 ? "-" + UNDER_20[n%10] : "");
+                if (n < 1000) return UNDER_20[n/100] + " hundred" + (n%100 != 0 ? " " + convert(n%100) : "");
+                if (n < 1000000) return convert(n/1000) + " thousand" + (n%1000 != 0 ? " " + convert(n%1000) : "");
+                return convert(n/1000000) + " million" + (n%1000000 != 0 ? " " + convert(n%1000000) : "");
+            }
+        }
+        
+        NumberConverter converter = new NumberConverter();
+        
+        if (dollars > 0) {
+            result.append(converter.convert(dollars)).append(" dollars");
+            if (cents > 0) {
+                result.append(" and ");
+            }
+        }
+        
+        if (cents > 0) {
+            result.append(converter.convert(cents)).append(" cents");
+        }
+        
+        return result.toString();

@@ -82,4 +82,119 @@ Factorial
       fact *= num
     return fact
 
+Sum of two number
+    #
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [complement, num]
+        seen[num] = i
+    return []
 
+Money to words
+	#
+    def under_20(n):
+      words = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 
+               'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+               'sixteen', 'seventeen', 'eighteen', 'nineteen']
+      return words[n]
+    
+    def tens(n):
+        words = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy',
+                'eighty', 'ninety']
+        return words[n]
+    
+    def convert_hundreds(n):
+        if n >= 100:
+            return f"{under_20(n // 100)} hundred {convert_tens(n % 100)}".strip()
+        return convert_tens(n)
+    
+    def convert_tens(n):
+        if n < 20:
+            return under_20(n)
+        return f"{tens(n // 10)}-{under_20(n % 10)}" if n % 10 else tens(n // 10)
+    
+    if amount == 0:
+        return "zero dollars"
+        
+    dollars = int(amount)
+    cents = round((amount - dollars) * 100)
+    
+    parts = []
+    
+    if dollars > 0:
+        billions = dollars // 1_000_000_000
+        millions = (dollars % 1_000_000_000) // 1_000_000
+        thousands = (dollars % 1_000_000) // 1_000
+        remainder = dollars % 1_000
+        
+        if billions:
+            parts.append(f"{convert_hundreds(billions)} billion")
+        if millions:
+            parts.append(f"{convert_hundreds(millions)} million")
+        if thousands:
+            parts.append(f"{convert_hundreds(thousands)} thousand")
+        if remainder or dollars == 0:
+            parts.append(convert_hundreds(remainder))
+            
+        parts = [' '.join(parts).strip(), 'dollars']
+        
+        if cents:
+            parts.append(f"and {convert_tens(cents)} cents")
+    else:
+        if cents:
+            parts.append(f"{convert_tens(cents)} cents")
+    
+    return ' '.join(parts)
+
+Roman to Integer
+
+    #
+    roman = {
+        'I': 1, 'V': 5, 'X': 10, 'L': 50,
+        'C': 100, 'D': 500, 'M': 1000
+    }
+    total = 0
+    prev_value = 0
+    
+    for c in reversed(s):
+        curr_value = roman[c]
+        total = total + curr_value if curr_value >= prev_value else total - curr_value
+        prev_value = curr_value
+            
+    return total
+
+Integer to roman
+
+    #
+    values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+    romans = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I']
+    
+    result = ''
+    for i, value in enumerate(values):
+        while num >= value:
+            result += romans[i]
+            num -= value
+            
+    return result
+
+Palindrome
+
+    #
+    return s == s[::-1]
+
+Valid parentheses
+
+    #
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    
+    for char in s:
+        if char in '([{':
+            stack.append(char)
+        elif char in pairs:
+            if not stack or stack.pop() != pairs[char]:
+                return False
+                
+    return len(stack) == 0

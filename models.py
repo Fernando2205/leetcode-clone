@@ -36,7 +36,7 @@ class Solution(db.Model):
     problem_id = db.Column(db.Integer, db.ForeignKey(
         'problem.id'), nullable=False)
     code = db.Column(db.Text, nullable=False)
-    result = db.Column(db.String(50), nullable=False)
+    result = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
 
     user = db.relationship('User', backref=db.backref('solutions', lazy=True))

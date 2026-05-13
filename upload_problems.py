@@ -30,7 +30,8 @@ problems = [{
         {"input": [5], "expected_output": "Buzz"},
         {"input": [589958805], "expected_output": "FizzBuzz"},
         {"input": [1], "expected_output": "1"},
-        {"input": [998160272], "expected_output": "998160272"}
+        {"input": [998160272], "expected_output": "998160272"},
+        {"input": [3], "expected_output": "Fizz"},
     ]
 }, {
     'name':
@@ -293,6 +294,7 @@ problems = [{
         {"input": ["()[]{}"], "expected_output": True},
     ]
 }]
+
 
 with app.app_context():
     db.create_all()

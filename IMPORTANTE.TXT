@@ -1,0 +1,4 @@
+Para cargar los problemas a la base de datos ejecutar el archivo upload_problems.py,
+luego de eso ya puede iniciar el servidor (main.py) con normalidad.
+
+Las dependencias utilizadas estan en el archivo requirements.txt

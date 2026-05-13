@@ -22,9 +22,11 @@ from db import db
 
 app = Flask(__name__)
 
-secret_key = os.urandom(24)
-app.config['SECRET_KEY'] = secret_key
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+database_url = os.environ.get("DATABASE_URL", "sqlite:///database.db")
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -40,14 +42,14 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.before_request
-def create_tables() -> None:
-    """
-    Creates the database tables if they do not exist.
-    """
-    if not hasattr(app, 'tables_created'):
-        db.create_all()
-        app.tables_created = True
+# @app.before_request
+# def create_tables() -> None:
+#     """
+#     Creates the database tables if they do not exist.
+#     """
+#     if not hasattr(app, 'tables_created'):
+#         db.create_all()
+#         app.tables_created = True
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -519,4 +521,4 @@ def is_string(value: object) -> bool:
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

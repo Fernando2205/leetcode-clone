@@ -312,12 +312,18 @@ def evaluate_java_code(solution_code: str, test_cases: list, input_params: list)
         with open(main_path, 'w', encoding='utf-8') as f:
             f.write(wrapper_code)
 
+        # Ensure JAVA_HOME is set for subprocess
+        env = os.environ.copy()
+        if 'JAVA_HOME' not in env:
+            env['JAVA_HOME'] = '/app/.apt/usr/lib/jvm/openjdk-21'
+        
         # Compile Java files
         compile_process = subprocess.run(
             ['javac', solution_path, main_path],
             capture_output=True,
             text=True,
-            check=False
+            check=False,
+            env=env
         )
 
         # Check compilation errors
@@ -340,7 +346,8 @@ def evaluate_java_code(solution_code: str, test_cases: list, input_params: list)
                     ['java', '-cp', temp_dir, 'Main'] + input_data,
                     capture_output=True,
                     text=True,
-                    check=False
+                    check=False,
+                    env=env
                 )
 
                 if process.returncode != 0:
